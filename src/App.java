@@ -24,10 +24,13 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class App extends Application {
+    private Stage stage;
     private Scene FirstScene;
     private Scene SecondSceneR;
     private Scene SecondSceneL;
     private Scene ThirdSceneR;
+    Books b[] = new Books[12];
+    Librarian p[] = new Librarian[2];
 
     public static void main(String[] args) {
 
@@ -35,21 +38,10 @@ public class App extends Application {
 
     }
 
-    void ShowScene(Stage primaryStage, Scene scene, String title) {
-        primaryStage.setTitle(title);
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
-
     @Override
     public void start(Stage primaryStage) {
+        stage = primaryStage;
 
-        FirstScene = CreateFirstScene(primaryStage);
-        ShowScene(primaryStage, FirstScene, "Library Management System");
-    }
-
-    private Scene CreateFirstScene(Stage primaryStage) {
-        Books b[] = new Books[12];
         b[0] = new Books("The Alchemist", "Paulo Coelho", "1988");
         b[1] = new Books("Little Women", "Louisa May", "1968");
         b[2] = new Books("Harry Potter", "J.K.Rowling", "1997");
@@ -63,11 +55,25 @@ public class App extends Application {
         b[10] = new Books("Avatar the last airbender", "Michael Dante DiMartino", "2005");
         b[11] = new Books("The Kite Runner", "Khaled Hosseini", "2003");
 
-        Librarian p[] = new Librarian[2];
         p[0] = new Librarian("21P0223", "k", "Librarian", "Karim", "Sherif", "heliopolis",
                 "karim", "01112653391", false);
         p[1] = new Librarian("21P0064", "o", "Librarian", "omar", "korkor", "nozha",
                 "omar", "01112653391", false);
+
+        FirstScene = CreateFirstScene();
+        ShowScene(FirstScene);
+        SecondSceneR = Librarian_SignIn_Scene();
+        SecondSceneL = Reader_SignIn_Scene();
+
+    }
+
+    void ShowScene(Scene scene) {
+        stage.setTitle("Library Management System");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private Scene CreateFirstScene() {
 
         Text title = new Text("Welcome to Library Management System");
         title.setFont(Font.font("Arial", FontWeight.BOLD, 50));
@@ -108,11 +114,8 @@ public class App extends Application {
         LibVbox.setAlignment(Pos.CENTER);
         Lsignin.setGraphic(LibVbox);
 
-        SecondSceneR = Librarian_SignIn_Scene(primaryStage, p, b);
-
         Lsignin.setOnAction(e -> {
-
-            ShowScene(primaryStage, SecondSceneR, "Librarian Sign in");
+            ShowScene(SecondSceneR);
         });
 
         // readers buttons
@@ -150,11 +153,9 @@ public class App extends Application {
         ReaderVbox.setAlignment(Pos.CENTER);
         Rsignin.setGraphic(ReaderVbox);
 
-        SecondSceneL = Reader_SignIn_Scene(primaryStage, p);
-
         Rsignin.setOnAction(e -> {
 
-            ShowScene(primaryStage, SecondSceneL, "Reader Sign in");
+            ShowScene(SecondSceneL);
         });
 
         HBox row0 = new HBox();
@@ -173,7 +174,7 @@ public class App extends Application {
         return new Scene(vBox, 1200, 600);
     }
 
-    private Scene Librarian_SignIn_Scene(Stage primaryStage, Librarian p[], Books b[]) {
+    private Scene Librarian_SignIn_Scene() {
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setHgap(10);
@@ -184,7 +185,7 @@ public class App extends Application {
         HBox backHBox = new HBox(backButton);
         backHBox.setAlignment(Pos.CENTER);
         backButton.setOnAction(event -> {
-            ShowScene(primaryStage, FirstScene, "Library Management System");
+            ShowScene(FirstScene);
         });
 
         Text text = new Text("Librarian Sign in");
@@ -208,23 +209,22 @@ public class App extends Application {
         Button signInButton = new Button("Sign In");
 
         signInButton.setOnAction(event -> {
-            // int i;
-            // int j = 0;
-            // for (i = 0; i < p.length; i++) {
-            // j = i;
-            // if (emailField.getText().equals(p[i].getEmail())
-            // && passwordField.getText().equals(p[i].getPassword()) &&
-            // p[i].getType().equals("Librarian")) {
-            // ThirdSceneR = LibrarianScene(primaryStage, p, j, b);
-            // primaryStage.setScene(ThirdSceneR);
-            // primaryStage.show();
+            int i;
+            int LoggedInUser = 0;
+            for (i = 0; i < p.length; i++) {
+                LoggedInUser = i;
+                if (emailField.getText().equals(p[i].getEmail())
+                        && passwordField.getText().equals(p[i].getPassword()) &&
+                        p[i].getType().equals("Librarian")) {
+                    ThirdSceneR = LibrarianScene(LoggedInUser);
+                    ShowScene(ThirdSceneR);
 
-            // }
-            // }
+                }
+            }
 
-            int j = 0;
-            ThirdSceneR = LibrarianScene(primaryStage, p, j, b);
-            ShowScene(primaryStage, ThirdSceneR, "Librarian");
+            // int LoggedInUser = 0;
+            // ThirdSceneR = LibrarianScene(LoggedInUser);
+            // ShowScene(ThirdSceneR);
 
         });
 
@@ -248,7 +248,7 @@ public class App extends Application {
         return new Scene(stackPane, 1200, 600);
     }
 
-    private Scene Reader_SignIn_Scene(Stage primaryStage, Librarian p[]) {
+    private Scene Reader_SignIn_Scene() {
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setHgap(10);
@@ -259,7 +259,7 @@ public class App extends Application {
         HBox backHBox = new HBox(backButton);
         backHBox.setAlignment(Pos.CENTER);
         backButton.setOnAction(event -> {
-            ShowScene(primaryStage, FirstScene, "Library Management System");
+            ShowScene(FirstScene);
         });
 
         Text text = new Text("Reader Sign in");
@@ -303,7 +303,7 @@ public class App extends Application {
 
     }
 
-    private Scene LibrarianScene(Stage primaryStage, Librarian p[], int j, Books b[]) {
+    private Scene LibrarianScene(int LoggedInUser) {
         BorderPane borderPane = new BorderPane();
         HBox navbar = new HBox();
         navbar.setPrefHeight(40);
@@ -319,7 +319,7 @@ public class App extends Application {
         myProfileButton.setFont(Font.font("Arial", 17));
         myProfileButton.setPrefWidth(200);
         myProfileButton.setOnAction(event -> {
-            GridPane profileGridPane = profile(p, j, b, borderPane);
+            GridPane profileGridPane = profile(LoggedInUser, borderPane);
             borderPane.setCenter(profileGridPane);
         });
         // make button by default clicked
@@ -331,7 +331,7 @@ public class App extends Application {
         usersButton.setFont(Font.font("Arial", 17));
         usersButton.setPrefWidth(200);
         usersButton.setOnAction(event -> {
-            GridPane usersGridPane = users(p, j, b);
+            GridPane usersGridPane = users(LoggedInUser);
             borderPane.setCenter(usersGridPane);
         });
 
@@ -340,7 +340,7 @@ public class App extends Application {
         booksButton.setFont(Font.font("Arial", 17));
         booksButton.setPrefWidth(200);
         booksButton.setOnAction(event -> {
-            GridPane booksGridPane = books(primaryStage, p, j, b, borderPane);
+            GridPane booksGridPane = books(LoggedInUser, borderPane);
             borderPane.setCenter(booksGridPane);
         });
 
@@ -349,7 +349,7 @@ public class App extends Application {
         signOutButton.setFont(Font.font("Arial", 17));
         signOutButton.setPrefWidth(200);
         signOutButton.setOnAction(event -> {
-            ShowScene(primaryStage, FirstScene, "Library Management System");
+            ShowScene(FirstScene);
         });
 
         navbar.setAlignment(Pos.CENTER);
@@ -361,7 +361,7 @@ public class App extends Application {
 
     }
 
-    private GridPane profile(Librarian p[], int j, Books b[], BorderPane borderPane) {
+    private GridPane profile(int LoggedInUser, BorderPane borderPane) {
         GridPane gridPane = new GridPane();
         gridPane.setHgap(10);
         gridPane.setVgap(10);
@@ -375,37 +375,37 @@ public class App extends Application {
         Text ID = new Text("ID: ");
         ID.setFont(labelFont);
 
-        Text IDValue = new Text(p[j].getID());
+        Text IDValue = new Text(p[LoggedInUser].getID());
         IDValue.setFont(valueFont);
 
         Text Name = new Text("Name: ");
         Name.setFont(labelFont);
 
-        Text nameValue = new Text(p[j].getFirstName() + " " + p[j].getLastName());
+        Text nameValue = new Text(p[LoggedInUser].getFirstName() + " " + p[LoggedInUser].getLastName());
         nameValue.setFont(valueFont);
 
         Text Email = new Text("Email: ");
         Email.setFont(labelFont);
 
-        Text emailValue = new Text(p[j].getEmail());
+        Text emailValue = new Text(p[LoggedInUser].getEmail());
         emailValue.setFont(valueFont);
 
         Text Address = new Text("Address: ");
         Address.setFont(labelFont);
 
-        Text addressValue = new Text(p[j].getAddress());
+        Text addressValue = new Text(p[LoggedInUser].getAddress());
         addressValue.setFont(valueFont);
 
         Text Phone = new Text("Phone: ");
         Phone.setFont(labelFont);
 
-        Text phoneValue = new Text(p[j].getCellPhone());
+        Text phoneValue = new Text(p[LoggedInUser].getCellPhone());
         phoneValue.setFont(valueFont);
 
         Text Type = new Text("Type: ");
         Type.setFont(labelFont);
 
-        Text typeValue = new Text(p[j].getType());
+        Text typeValue = new Text(p[LoggedInUser].getType());
         typeValue.setFont(valueFont);
 
         HBox idBox = new HBox(ID, IDValue);
@@ -440,12 +440,12 @@ public class App extends Application {
         return gridPane;
     }
 
-    private GridPane users(Librarian p[], int j, Books b[]) {
+    private GridPane users(int LoggedInUser) {
         GridPane gridPane = new GridPane();
         return gridPane;
     }
 
-    private GridPane books(Stage primaryStage, Librarian p[], int j, Books b[], BorderPane borderPane) {
+    private GridPane books(int LoggedInUser, BorderPane borderPane) {
         GridPane gridPane = new GridPane();
         int row = 1;
         int col = 0;
@@ -468,7 +468,7 @@ public class App extends Application {
             Button rentBook = new Button("Rent");
             rentBook.setOnAction(e -> {
 
-                GridPane profileGridPane = profile(p, j, b, borderPane);
+                GridPane profileGridPane = profile(LoggedInUser, borderPane);
                 VBox vBox = new VBox();
                 vBox.getChildren().addAll(bookName, bookAuthor, Date);
 
@@ -478,11 +478,19 @@ public class App extends Application {
             });
 
             Button deleteBook = new Button("Delete");
+
+            if (b[i].getName().equals("")) {
+                deleteBook.setVisible(false);
+                rentBook.setVisible(false);
+            }
+
             HBox buttons = new HBox(rentBook, deleteBook);
             buttons.setSpacing(10);
-
             deleteBook.setOnAction(e -> {
-                p[j].DeleteBook(bookInfo, b, index, bookName, bookAuthor, Date, buttons);
+
+                b = p[LoggedInUser].DeleteBook(bookInfo, b, index, bookName, bookAuthor, Date, buttons);
+                GridPane booksGridPane = books(LoggedInUser, borderPane);
+                borderPane.setCenter(booksGridPane);
 
             });
 
