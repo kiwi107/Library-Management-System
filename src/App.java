@@ -35,13 +35,17 @@ public class App extends Application {
 
     }
 
+    void ShowScene(Stage primaryStage, Scene scene, String title) {
+        primaryStage.setTitle(title);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
     @Override
     public void start(Stage primaryStage) {
 
         FirstScene = CreateFirstScene(primaryStage);
-        primaryStage.setTitle("Library Management System");
-        primaryStage.setScene(FirstScene);
-        primaryStage.show();
+        ShowScene(primaryStage, FirstScene, "Library Management System");
     }
 
     private Scene CreateFirstScene(Stage primaryStage) {
@@ -108,9 +112,7 @@ public class App extends Application {
 
         Lsignin.setOnAction(e -> {
 
-            primaryStage.setScene(SecondSceneR);
-            primaryStage.setTitle("Sign in as Librarian");
-            primaryStage.show();
+            ShowScene(primaryStage, SecondSceneR, "Librarian Sign in");
         });
 
         // readers buttons
@@ -152,9 +154,7 @@ public class App extends Application {
 
         Rsignin.setOnAction(e -> {
 
-            primaryStage.setScene(SecondSceneL);
-            primaryStage.setTitle("Sign in as Reader");
-            primaryStage.show();
+            ShowScene(primaryStage, SecondSceneL, "Reader Sign in");
         });
 
         HBox row0 = new HBox();
@@ -184,8 +184,7 @@ public class App extends Application {
         HBox backHBox = new HBox(backButton);
         backHBox.setAlignment(Pos.CENTER);
         backButton.setOnAction(event -> {
-            primaryStage.setScene(FirstScene);
-            primaryStage.show();
+            ShowScene(primaryStage, FirstScene, "Library Management System");
         });
 
         Text text = new Text("Librarian Sign in");
@@ -225,8 +224,7 @@ public class App extends Application {
 
             int j = 0;
             ThirdSceneR = LibrarianScene(primaryStage, p, j, b);
-            primaryStage.setScene(ThirdSceneR);
-            primaryStage.show();
+            ShowScene(primaryStage, ThirdSceneR, "Librarian");
 
         });
 
@@ -261,8 +259,7 @@ public class App extends Application {
         HBox backHBox = new HBox(backButton);
         backHBox.setAlignment(Pos.CENTER);
         backButton.setOnAction(event -> {
-            primaryStage.setScene(FirstScene);
-            primaryStage.show();
+            ShowScene(primaryStage, FirstScene, "Library Management System");
         });
 
         Text text = new Text("Reader Sign in");
@@ -352,8 +349,7 @@ public class App extends Application {
         signOutButton.setFont(Font.font("Arial", 17));
         signOutButton.setPrefWidth(200);
         signOutButton.setOnAction(event -> {
-            primaryStage.setScene(FirstScene);
-            primaryStage.show();
+            ShowScene(primaryStage, FirstScene, "Library Management System");
         });
 
         navbar.setAlignment(Pos.CENTER);
@@ -505,4 +501,5 @@ public class App extends Application {
 
         return gridPane;
     }
+
 }
