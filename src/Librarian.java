@@ -117,4 +117,15 @@ public class Librarian extends Person {
         }
     }
 
+    public Books[] AddBook(Books b[], String name, String author, String publishDate) {
+        Books newBook[] = new Books[b.length + 1];
+        for (int j = 0; j < b.length; j++) {
+
+            newBook[j] = b[j];
+
+        }
+        newBook[b.length] = new Books(name, author, publishDate);
+        return newBook;
+
+    }
 }

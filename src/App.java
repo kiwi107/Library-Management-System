@@ -390,7 +390,7 @@ public class App extends Application {
 
     private GridPane profile(int LoggedInUser, BorderPane borderPane) {
         GridPane gridPane = new GridPane();
-        ScrollBar scrollBar = new ScrollBar();
+
         gridPane.setHgap(80);
         gridPane.setVgap(20);
         gridPane.setPadding(new Insets(20, 20, 20, 20));
@@ -535,6 +535,46 @@ public class App extends Application {
             gridPane.add(bookInfo, col, row);
 
         }
+
+        Button addBook = new Button("Add Book");
+        addBook.setOnAction(e -> {
+            Label nameLabel = new Label("Book Name");
+            TextField nameField = new TextField();
+
+            Label autherLabel = new Label("Book Author");
+            TextField autherField = new TextField();
+
+            Label publishDateLabel = new Label("Publish Date");
+            TextField publishDateField = new TextField();
+
+            Button addButton = new Button("Add Book");
+            GridPane addBookGridPane = new GridPane();
+            addBookGridPane.add(nameLabel, 0, 0);
+            addBookGridPane.add(nameField, 1, 0);
+            addBookGridPane.add(autherLabel, 0, 1);
+            addBookGridPane.add(autherField, 1, 1);
+            addBookGridPane.add(publishDateLabel, 0, 2);
+            addBookGridPane.add(publishDateField, 1, 2);
+            addBookGridPane.add(addButton, 1, 3);
+
+            Stage addBookStage = new Stage();
+            Scene addBookScene = new Scene(addBookGridPane, 300, 200);
+            addBookStage.setScene(addBookScene);
+            addBookStage.show();
+            addButton.setOnAction(e1 -> {
+                b = p[LoggedInUser].AddBook(b, nameField.getText(), autherField.getText(),
+                        publishDateField.getText());
+                addBookStage.close();
+
+                ScrollPane addBookScrollPane = books(LoggedInUser, borderPane);
+                borderPane.setCenter(addBookScrollPane);
+                // trigger scroll to bottom
+                double maxValue = addBookScrollPane.getVmax();
+                addBookScrollPane.setVvalue(maxValue);
+            });
+
+        });
+        gridPane.add(addBook, 3, 0);
 
         ScrollPane scrollPane = new ScrollPane(gridPane); // wrap GridPane in ScrollPane
         scrollPane.setFitToWidth(true);
