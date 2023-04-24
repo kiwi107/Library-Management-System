@@ -4,10 +4,14 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.ScrollBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -29,7 +33,7 @@ public class App extends Application {
     private Scene SecondSceneR;
     private Scene SecondSceneL;
     private Scene ThirdSceneR;
-    Books b[] = new Books[12];
+    Books b[] = new Books[20];
     Librarian p[] = new Librarian[2];
 
     public static void main(String[] args) {
@@ -53,11 +57,19 @@ public class App extends Application {
         b[8] = new Books("The Maze Runner", "James Dashner", "2009");
         b[9] = new Books("The Fault in Our Stars", "John Green", "2012");
         b[10] = new Books("Avatar the last airbender", "Michael Dante DiMartino", "2005");
-        b[11] = new Books("The Kite Runner", "Khaled Hosseini", "2003");
+        b[11] = new Books("The Twilight Saga", "Stephenie Meyer", "2005");
+        b[12] = new Books("it ends with us", "Colleen Hoover", "2016");
+        b[13] = new Books("Confess", "Colleen Hoover", "2016");
+        b[14] = new Books("The Book of Three", "Lloyd Alexander", "1964");
+        b[15] = new Books("The Chronicles of Narnia", "C.S.Lewis", "1950");
+        b[16] = new Books("Atomic Habits", "James Clear", "2018");
+        b[17] = new Books("The Magician's Nephew", "C.S.Lewis", "1955");
+        b[18] = new Books("think like a monk", "Jay Shetty", "2019");
+        b[19] = new Books("The Silver Chair", "C.S.Lewis", "1953");
 
         p[0] = new Librarian("21P0223", "k", "Librarian", "Karim", "Sherif", "heliopolis",
                 "karim", "01112653391", false);
-        p[1] = new Librarian("21P0064", "o", "Librarian", "omar", "korkor", "nozha",
+        p[1] = new Librarian("21P0064", "o", "Librarian", "Omar", "Korkor", "nozha",
                 "omar", "01112653391", false);
 
         FirstScene = CreateFirstScene();
@@ -209,22 +221,37 @@ public class App extends Application {
         Button signInButton = new Button("Sign In");
 
         signInButton.setOnAction(event -> {
-            int i;
-            int LoggedInUser = 0;
-            for (i = 0; i < p.length; i++) {
-                LoggedInUser = i;
-                if (emailField.getText().equals(p[i].getEmail())
-                        && passwordField.getText().equals(p[i].getPassword()) &&
-                        p[i].getType().equals("Librarian")) {
-                    ThirdSceneR = LibrarianScene(LoggedInUser);
-                    ShowScene(ThirdSceneR);
-
-                }
-            }
-
+            // Boolean LoggedIn = false;
             // int LoggedInUser = 0;
+            // for (int i = 0; i < p.length; i++) {
+
+            // if (emailField.getText().equals(p[i].getEmail())
+            // && passwordField.getText().equals(p[i].getPassword()) &&
+            // p[i].getType().equals("Librarian")) {
+            // LoggedInUser = i;
             // ThirdSceneR = LibrarianScene(LoggedInUser);
             // ShowScene(ThirdSceneR);
+            // LoggedIn = true;
+            // break;
+
+            // } else {
+
+            // LoggedIn = false;
+            // }
+
+            // }
+            // if (LoggedIn == false) {
+            // Alert alert = new Alert(AlertType.ERROR);
+            // alert.setTitle("Error");
+            // alert.setHeaderText("Wrong Email or Password");
+            // alert.setContentText("Try again");
+            // alert.showAndWait();
+
+            // }
+
+            int LoggedInUser = 0;
+            ThirdSceneR = LibrarianScene(LoggedInUser);
+            ShowScene(ThirdSceneR);
 
         });
 
@@ -340,7 +367,7 @@ public class App extends Application {
         booksButton.setFont(Font.font("Arial", 17));
         booksButton.setPrefWidth(200);
         booksButton.setOnAction(event -> {
-            GridPane booksGridPane = books(LoggedInUser, borderPane);
+            ScrollPane booksGridPane = books(LoggedInUser, borderPane);
             borderPane.setCenter(booksGridPane);
         });
 
@@ -363,8 +390,10 @@ public class App extends Application {
 
     private GridPane profile(int LoggedInUser, BorderPane borderPane) {
         GridPane gridPane = new GridPane();
-        gridPane.setHgap(10);
-        gridPane.setVgap(10);
+        ScrollBar scrollBar = new ScrollBar();
+        gridPane.setHgap(80);
+        gridPane.setVgap(20);
+        gridPane.setPadding(new Insets(20, 20, 20, 20));
 
         Text personal = new Text("Personal Information");
         personal.setFont(Font.font("Arial", FontWeight.BOLD, 40));
@@ -431,10 +460,19 @@ public class App extends Application {
         gridPane.add(typeBox, 0, 6);
         gridPane.add(rentedBox, 1, 0);
 
-        for (int i = 0; i < 10; i++) {
-            RowConstraints row = new RowConstraints();
+        for (int i = 0; i < 6; i++) {
+            RowConstraints row = new RowConstraints(50);
             gridPane.getRowConstraints().add(row);
-            gridPane.getRowConstraints().get(i).setPrefHeight(70);
+        }
+
+        p[LoggedInUser].DisplayRentedBooks(p, LoggedInUser, gridPane);
+
+        // print array of rented books
+        for (int i = 0; i < p[LoggedInUser].getRentedBooks().length; i++) {
+            if (p[LoggedInUser].getRentedBooks()[i] != null) {
+                System.out.println(p[LoggedInUser].getRentedBooks()[i].getName());
+
+            }
         }
 
         return gridPane;
@@ -445,7 +483,7 @@ public class App extends Application {
         return gridPane;
     }
 
-    private GridPane books(int LoggedInUser, BorderPane borderPane) {
+    private ScrollPane books(int LoggedInUser, BorderPane borderPane) {
         GridPane gridPane = new GridPane();
         int row = 1;
         int col = 0;
@@ -467,29 +505,20 @@ public class App extends Application {
 
             Button rentBook = new Button("Rent");
             rentBook.setOnAction(e -> {
-
+                p[LoggedInUser].RentBook(p, b, LoggedInUser, index);
                 GridPane profileGridPane = profile(LoggedInUser, borderPane);
-                VBox vBox = new VBox();
-                vBox.getChildren().addAll(bookName, bookAuthor, Date);
-
-                profileGridPane.add(vBox, 1, 1);
-
                 borderPane.setCenter(profileGridPane);
+
             });
 
             Button deleteBook = new Button("Delete");
-
-            if (b[i].getName().equals("")) {
-                deleteBook.setVisible(false);
-                rentBook.setVisible(false);
-            }
 
             HBox buttons = new HBox(rentBook, deleteBook);
             buttons.setSpacing(10);
             deleteBook.setOnAction(e -> {
 
                 b = p[LoggedInUser].DeleteBook(bookInfo, b, index, bookName, bookAuthor, Date, buttons);
-                GridPane booksGridPane = books(LoggedInUser, borderPane);
+                ScrollPane booksGridPane = books(LoggedInUser, borderPane);
                 borderPane.setCenter(booksGridPane);
 
             });
@@ -497,7 +526,7 @@ public class App extends Application {
             bookInfo.getChildren().addAll(bookName, bookAuthor, Date, buttons);
 
             // 5 books per row
-            if (col % 5 == 0) {
+            if (col % 4 == 0) {
                 row++;
                 col = 0;
             }
@@ -507,7 +536,13 @@ public class App extends Application {
 
         }
 
-        return gridPane;
+        ScrollPane scrollPane = new ScrollPane(gridPane); // wrap GridPane in ScrollPane
+        scrollPane.setFitToWidth(true);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS); // set vertical scroll bar policy
+
+        // rest of the code remains the same
+
+        return scrollPane;
     }
 
 }
