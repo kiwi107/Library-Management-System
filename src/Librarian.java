@@ -1,3 +1,6 @@
+import java.util.Arrays;
+
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -40,34 +43,6 @@ public class Librarian extends Person {
         }
 
         return newB;
-
-        // if (b == null || index < 0
-        // || index >= b.length) {
-
-        // return b;
-        // }
-
-        // // Create another bay of size one less
-        // Books[] newB = new Books[b.length - 1];
-
-        // // Copy the elements except the index
-        // // from original bay to the other bay
-        // for (int i = 0, k = 0; i < b.length; i++) {
-
-        // // if the index is
-        // // the removal element index
-        // if (i == index) {
-        // continue;
-        // }
-
-        // // if the index is not
-        // // the removal element index
-        // newB[k++] = b[i];
-        // }
-
-        // // return the resultant bay
-        // return newB;
-
     }
 
     // called in the book scene & it adds the book to the rented books array
@@ -128,4 +103,18 @@ public class Librarian extends Person {
         return newBook;
 
     }
+
+    public Books[] searchBooks(Books[] orgBooks, TextField searchField) {
+        int j = 0;
+        Books[] newBooks = new Books[orgBooks.length];
+        for (int i = 0; i < orgBooks.length; i++) {
+            if (orgBooks[i].getName().toLowerCase().contains(searchField.getText().toLowerCase())) {
+                newBooks[j] = orgBooks[i];
+                j++;
+            }
+        }
+        // make size dependable on search
+        return Arrays.copyOf(newBooks, j);
+    }
+
 }

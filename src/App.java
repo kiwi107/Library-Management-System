@@ -8,7 +8,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
@@ -34,6 +33,8 @@ public class App extends Application {
     private Scene SecondSceneL;
     private Scene ThirdSceneR;
     Books b[] = new Books[20];
+
+    Books orgBooks[] = new Books[b.length];
     Librarian p[] = new Librarian[2];
 
     public static void main(String[] args) {
@@ -46,31 +47,35 @@ public class App extends Application {
     public void start(Stage primaryStage) {
         stage = primaryStage;
 
-        b[0] = new Books("The Alchemist", "Paulo Coelho", "1988");
-        b[1] = new Books("Little Women", "Louisa May", "1968");
-        b[2] = new Books("Harry Potter", "J.K.Rowling", "1997");
-        b[3] = new Books("The Lord of the Rings", "J.R.R.Tolkien", "1954");
-        b[4] = new Books("The Hobbit", "J.R.R.Tolkien", "1937");
-        b[5] = new Books("The Da Vinci Code", "Dan Brown", "2003");
-        b[6] = new Books("Redeeming Love", "Francine Rivers", "1991");
-        b[7] = new Books("The Hunger Games", "Suzanne Collins", "2008");
-        b[8] = new Books("The Maze Runner", "James Dashner", "2009");
-        b[9] = new Books("The Fault in Our Stars", "John Green", "2012");
-        b[10] = new Books("Avatar the last airbender", "Michael Dante DiMartino", "2005");
-        b[11] = new Books("The Twilight Saga", "Stephenie Meyer", "2005");
-        b[12] = new Books("it ends with us", "Colleen Hoover", "2016");
-        b[13] = new Books("Confess", "Colleen Hoover", "2016");
-        b[14] = new Books("The Book of Three", "Lloyd Alexander", "1964");
-        b[15] = new Books("The Chronicles of Narnia", "C.S.Lewis", "1950");
-        b[16] = new Books("Atomic Habits", "James Clear", "2018");
-        b[17] = new Books("The Magician's Nephew", "C.S.Lewis", "1955");
-        b[18] = new Books("think like a monk", "Jay Shetty", "2019");
-        b[19] = new Books("The Silver Chair", "C.S.Lewis", "1953");
+        b[0] = new Books("The Alchemist", "Paulo Coelho", "1988", "img/avatar.jpeg");
+        b[1] = new Books("Little Women", "Louisa May", "1968", "img/avatar.jpeg");
+        b[2] = new Books("Harry Potter", "J.K.Rowling", "1997", "img/avatar.jpeg");
+        b[3] = new Books("The Lord of the Rings", "J.R.R.Tolkien", "1954", "img/avatar.jpeg");
+        b[4] = new Books("The Hobbit", "J.R.R.Tolkien", "1937", "img/avatar.jpeg");
+        b[5] = new Books("The Da Vinci Code", "Dan Brown", "2003", "img/avatar.jpeg");
+        b[6] = new Books("Redeeming Love", "Francine Rivers", "1991", "img/avatar.jpeg");
+        b[7] = new Books("The Hunger Games", "Suzanne Collins", "2008", "img/avatar.jpeg");
+        b[8] = new Books("The Maze Runner", "James Dashner", "2009", "img/avatar.jpeg");
+        b[9] = new Books("The Fault in Our Stars", "John Green", "2012", "img/avatar.jpeg");
+        b[10] = new Books("Avatar the last airbender", "Michael Dante DiMartino", "2005", "img/avatar.jpeg");
+        b[11] = new Books("The Twilight Saga", "Stephenie Meyer", "2005", "img/avatar.jpeg");
+        b[12] = new Books("it ends with us", "Colleen Hoover", "2016", "img/avatar.jpeg");
+        b[13] = new Books("Confess", "Colleen Hoover", "2016", "img/avatar.jpeg");
+        b[14] = new Books("The Book of Three", "Lloyd Alexander", "1964", "img/avatar.jpeg");
+        b[15] = new Books("The Chronicles of Narnia", "C.S.Lewis", "1950", "img/avatar.jpeg");
+        b[16] = new Books("Atomic Habits", "James Clear", "2018", "img/avatar.jpeg");
+        b[17] = new Books("The Magician's Nephew", "C.S.Lewis", "1955", "img/avatar.jpeg");
+        b[18] = new Books("think like a monk", "Jay Shetty", "2019", "img/avatar.jpeg");
+        b[19] = new Books("The Silver Chair", "C.S.Lewis", "1953", "img/avatar.jpeg");
 
         p[0] = new Librarian("21P0223", "k", "Librarian", "Karim", "Sherif", "heliopolis",
                 "karim", "01112653391", false);
         p[1] = new Librarian("21P0064", "o", "Librarian", "Omar", "Korkor", "nozha",
                 "omar", "01112653391", false);
+
+        for (int i = 0; i < b.length; i++) {
+            orgBooks[i] = b[i];
+        }
 
         FirstScene = CreateFirstScene();
         ShowScene(FirstScene);
@@ -343,18 +348,27 @@ public class App extends Application {
 
         Button myProfileButton = new Button("My Profile");
         myProfileButton.setStyle("-fx-background-color: #333333; -fx-text-fill: white;");
+        // myProfileButton.setOnMouseEntered(
+        // e -> myProfileButton.setStyle("-fx-background-color: #555555; -fx-text-fill:
+        // white;"));
+        // myProfileButton.setOnMouseExited(
+        // e -> myProfileButton.setStyle("-fx-background-color: #333333; -fx-text-fill:
+        // white;"));
         myProfileButton.setFont(Font.font("Arial", 17));
         myProfileButton.setPrefWidth(200);
         myProfileButton.setOnAction(event -> {
             GridPane profileGridPane = profile(LoggedInUser, borderPane);
             borderPane.setCenter(profileGridPane);
         });
-        // make button by default clicked
-        myProfileButton.requestFocus();
-        myProfileButton.fire();
 
         Button usersButton = new Button("Users");
         usersButton.setStyle("-fx-background-color: #333333; -fx-text-fill: white;");
+        // usersButton.setOnMouseEntered(
+        // e -> myProfileButton.setStyle("-fx-background-color: #555555; -fx-text-fill:
+        // white;"));
+        // usersButton.setOnMouseExited(
+        // e -> myProfileButton.setStyle("-fx-background-color: #333333; -fx-text-fill:
+        // white;"));
         usersButton.setFont(Font.font("Arial", 17));
         usersButton.setPrefWidth(200);
         usersButton.setOnAction(event -> {
@@ -364,6 +378,12 @@ public class App extends Application {
 
         Button booksButton = new Button("Books");
         booksButton.setStyle("-fx-background-color: #333333; -fx-text-fill: white;");
+        // booksButton.setOnMouseEntered(
+        // e -> myProfileButton.setStyle("-fx-background-color: #555555; -fx-text-fill:
+        // white;"));
+        // booksButton.setOnMouseExited(
+        // e -> myProfileButton.setStyle("-fx-background-color: #333333; -fx-text-fill:
+        // white;"));
         booksButton.setFont(Font.font("Arial", 17));
         booksButton.setPrefWidth(200);
         booksButton.setOnAction(event -> {
@@ -379,6 +399,30 @@ public class App extends Application {
             ShowScene(FirstScene);
         });
 
+        // myProfileButton.setOnMouseClicked(event -> {
+        // myProfileButton.setStyle("-fx-background-color: #666666; -fx-text-fill:
+        // white;");
+        // usersButton.setStyle("-fx-background-color: #333333; -fx-text-fill: white;");
+        // booksButton.setStyle("-fx-background-color: #333333; -fx-text-fill: white;");
+        // });
+
+        // usersButton.setOnMouseClicked(event -> {
+        // usersButton.setStyle("-fx-background-color: #666666; -fx-text-fill: white;");
+        // myProfileButton.setStyle("-fx-background-color: #333333; -fx-text-fill:
+        // white;");
+        // booksButton.setStyle("-fx-background-color: #333333; -fx-text-fill: white;");
+        // });
+
+        // booksButton.setOnMouseClicked(event -> {
+
+        // booksButton.setStyle("-fx-background-color: #666666; -fx-text-fill: white;");
+        // myProfileButton.setStyle("-fx-background-color: #333333; -fx-text-fill:
+        // white;");
+        // usersButton.setStyle("-fx-background-color: #333333; -fx-text-fill: white;");
+        // });
+        // make button by default clicked
+        myProfileButton.requestFocus();
+        myProfileButton.fire();
         navbar.setAlignment(Pos.CENTER);
         navbar.getChildren().addAll(title, myProfileButton, usersButton, booksButton, signOutButton);
 
@@ -468,12 +512,12 @@ public class App extends Application {
         p[LoggedInUser].DisplayRentedBooks(p, LoggedInUser, gridPane);
 
         // print array of rented books
-        for (int i = 0; i < p[LoggedInUser].getRentedBooks().length; i++) {
-            if (p[LoggedInUser].getRentedBooks()[i] != null) {
-                System.out.println(p[LoggedInUser].getRentedBooks()[i].getName());
+        // for (int i = 0; i < p[LoggedInUser].getRentedBooks().length; i++) {
+        // if (p[LoggedInUser].getRentedBooks()[i] != null) {
+        // System.out.println(p[LoggedInUser].getRentedBooks()[i].getName());
 
-            }
-        }
+        // }
+        // }
 
         return gridPane;
     }
@@ -484,49 +528,52 @@ public class App extends Application {
     }
 
     private ScrollPane books(int LoggedInUser, BorderPane borderPane) {
+
         GridPane gridPane = new GridPane();
+        gridPane.setHgap(15);
         int row = 1;
         int col = 0;
 
         for (int i = 0; i < b.length; i++) {
+            final int index = i;// setonaction msh radia ta5od 3'ir final?
 
+            ImageView imageView = new ImageView(b[i].getImage());
+            imageView.setFitWidth(120);
+            imageView.setFitHeight(170);
             Text bookName = new Text(b[i].getName());
-            bookName.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+            bookName.setFont(Font.font("Arial", FontWeight.BOLD, 13));
             Text bookAuthor = new Text(b[i].getAuthor());
-            bookAuthor.setFont(Font.font("Arial", 20));
+            bookAuthor.setFont(Font.font("Arial", 10));
             Text Date = new Text(b[i].getPublishDate());
-            Date.setFont(Font.font("Arial", 20));
+            Date.setFont(Font.font("Arial", 10));
 
             VBox bookInfo = new VBox();
             bookInfo.setSpacing(10);
             bookInfo.setPadding(new Insets(10));
+            bookInfo.setAlignment(Pos.CENTER);
 
-            final int index = i;
-
+            Button deleteBook = new Button("Delete");
             Button rentBook = new Button("Rent");
+            HBox buttons = new HBox(rentBook, deleteBook);
+            buttons.setAlignment(Pos.CENTER);
+            buttons.setSpacing(10);
+
             rentBook.setOnAction(e -> {
                 p[LoggedInUser].RentBook(p, b, LoggedInUser, index);
                 GridPane profileGridPane = profile(LoggedInUser, borderPane);
                 borderPane.setCenter(profileGridPane);
-
             });
 
-            Button deleteBook = new Button("Delete");
-
-            HBox buttons = new HBox(rentBook, deleteBook);
-            buttons.setSpacing(10);
             deleteBook.setOnAction(e -> {
-
                 b = p[LoggedInUser].DeleteBook(bookInfo, b, index, bookName, bookAuthor, Date, buttons);
                 ScrollPane booksGridPane = books(LoggedInUser, borderPane);
                 borderPane.setCenter(booksGridPane);
-
             });
 
-            bookInfo.getChildren().addAll(bookName, bookAuthor, Date, buttons);
+            bookInfo.getChildren().addAll(imageView, bookName, bookAuthor, Date, buttons);
 
             // 5 books per row
-            if (col % 4 == 0) {
+            if (col % 7 == 0) {
                 row++;
                 col = 0;
             }
@@ -538,6 +585,7 @@ public class App extends Application {
 
         Button addBook = new Button("Add Book");
         addBook.setOnAction(e -> {
+
             Label nameLabel = new Label("Book Name");
             TextField nameField = new TextField();
 
@@ -556,11 +604,11 @@ public class App extends Application {
             addBookGridPane.add(publishDateLabel, 0, 2);
             addBookGridPane.add(publishDateField, 1, 2);
             addBookGridPane.add(addButton, 1, 3);
-
             Stage addBookStage = new Stage();
             Scene addBookScene = new Scene(addBookGridPane, 300, 200);
             addBookStage.setScene(addBookScene);
             addBookStage.show();
+
             addButton.setOnAction(e1 -> {
                 b = p[LoggedInUser].AddBook(b, nameField.getText(), autherField.getText(),
                         publishDateField.getText());
@@ -576,11 +624,46 @@ public class App extends Application {
         });
         gridPane.add(addBook, 3, 0);
 
-        ScrollPane scrollPane = new ScrollPane(gridPane); // wrap GridPane in ScrollPane
-        scrollPane.setFitToWidth(true);
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS); // set vertical scroll bar policy
+        Button searchButton = new Button("search");
 
-        // rest of the code remains the same
+        TextField searchField = new TextField();
+        HBox searchBox = new HBox(searchField, searchButton);
+        searchBox.setSpacing(10);
+        HBox s = new HBox(addBook, searchBox);
+        s.setSpacing(800);
+        s.setPadding(new Insets(20, 20, 20, 20));
+
+        searchButton.setOnAction(e -> {
+
+            b = p[LoggedInUser].searchBooks(orgBooks, searchField);
+            if (b.length == 0) {
+
+                Text errorMessage = new Text("No books are found");
+                errorMessage.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+                HBox errorBox = new HBox(errorMessage);
+                errorBox.setPadding(new Insets(20, 20, 20, 20));
+                errorBox.setAlignment(Pos.CENTER);
+
+                VBox sr = new VBox(s, errorBox);
+                sr.setSpacing(40);
+
+                borderPane.setCenter(sr);
+
+            } else {
+                ScrollPane booksGridPane = books(LoggedInUser, borderPane);
+                borderPane.setCenter(booksGridPane);
+            }
+
+        });
+
+        BorderPane borderPaneBooks = new BorderPane();
+        borderPaneBooks.setCenter(gridPane);
+
+        borderPaneBooks.setTop(s);
+
+        ScrollPane scrollPane = new ScrollPane(borderPaneBooks);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
 
         return scrollPane;
     }
