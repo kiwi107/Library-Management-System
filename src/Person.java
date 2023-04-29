@@ -1,13 +1,13 @@
 public class Person {
-    String ID;
-    String Password;
-    String Type;
-    String FirstName;
-    String LastName;
-    String Address;
-    String Email;
-    String CellPhone;
-    boolean isBlocked;
+    private String ID;
+    private String Password;
+    private String Type;
+    private String FirstName;
+    private String LastName;
+    private String Address;
+    private String Email;
+    private String CellPhone;
+    private boolean isBlocked;
 
     public Person() {
     }

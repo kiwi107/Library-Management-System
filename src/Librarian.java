@@ -1,8 +1,10 @@
 import java.util.Arrays;
-
+import javafx.geometry.Pos;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+
 import javafx.scene.layout.VBox;
 
 import javafx.scene.text.Text;
@@ -26,10 +28,9 @@ public class Librarian extends Person {
     }
 
     // called in the book scene & creates a new book array with size -1
-    public Books[] DeleteBook(VBox vbox, Books b[], int index, Text bookName, Text authorName, Text publishDate,
-            HBox buttoms) {
+    public Books[] DeleteBook(GridPane gridpane, VBox bookinfo, Books b[], int index) {
         // remove from GUI
-        vbox.getChildren().removeAll(bookName, authorName, publishDate, buttoms);
+        gridpane.getChildren().remove(bookinfo);
 
         // remove from array
         Books newB[] = new Books[b.length - 1];
@@ -58,13 +59,16 @@ public class Librarian extends Person {
     }
 
     // called in the profile scene & it displays the rented books array as gui
-    public void DisplayRentedBooks(Librarian p[], int LoggedInUser, GridPane gridPane) {
+    public void DisplayRentedBooks(Librarian p[], int LoggedInUser, GridPane gridPane, ScrollPane scrollPane) {
         VBox rentedVBox;
         int row = 1;
-        int col = 1;
+        int col = 0;
         for (int j = 0; j < p[LoggedInUser].getRentedBooks().length; j++) {
 
             if (p[LoggedInUser].getRentedBooks()[j] != null) {
+                ImageView imageView = new ImageView(p[LoggedInUser].getRentedBooks()[j].getImage());
+                imageView.setFitWidth(120);
+                imageView.setFitHeight(170);
                 Text rentedName = new Text(p[LoggedInUser].getRentedBooks()[j].getName());
 
                 rentedName.setStyle("-fx-font: 17 arial;-fx-font-weight: bold;");
@@ -76,17 +80,20 @@ public class Librarian extends Person {
 
                 rentedDate.setStyle("-fx-font: 13 arial;");
                 rentedVBox = new VBox();
-                rentedVBox.getChildren().addAll(rentedName, rentedAuther, rentedDate);
+                rentedVBox.getChildren().addAll(imageView, rentedName, rentedAuther, rentedDate);
+                rentedVBox.setAlignment(Pos.CENTER);
 
                 gridPane.add(rentedVBox, col, row);
-                row++;
-                // 6 books per column
-                if (row == 7) {
-                    row = 1;
-                    col++;
+                col++;
+                // 3 books per column
+                if (col == 3) {
+                    col = 0;
+                    row++;
                 }
+                // trigger scroll to bottom
+                double maxValue = scrollPane.getVmax();
+                scrollPane.setVvalue(maxValue);
 
-                // break;
             }
 
         }
@@ -104,17 +111,18 @@ public class Librarian extends Person {
 
     }
 
-    public Books[] searchBooks(Books[] orgBooks, TextField searchField) {
-        int j = 0;
+    public Books[] searchBooks(Books orgBooks[], TextField searchField) {
+
+        int foundBooks = 0;
         Books[] newBooks = new Books[orgBooks.length];
         for (int i = 0; i < orgBooks.length; i++) {
             if (orgBooks[i].getName().toLowerCase().contains(searchField.getText().toLowerCase())) {
-                newBooks[j] = orgBooks[i];
-                j++;
+                newBooks[foundBooks] = orgBooks[i];
+                foundBooks++;
             }
         }
-        // make size dependable on search
-        return Arrays.copyOf(newBooks, j);
+        // make size dependable on found books in search
+        return Arrays.copyOf(newBooks, foundBooks);
     }
 
 }

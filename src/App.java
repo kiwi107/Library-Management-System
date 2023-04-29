@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import javafx.util.Duration;
 import javafx.animation.ScaleTransition;
 import javafx.application.Application;
@@ -14,6 +15,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
@@ -33,7 +35,6 @@ public class App extends Application {
     private Scene SecondSceneL;
     private Scene ThirdSceneR;
     Books b[] = new Books[20];
-
     Books orgBooks[] = new Books[b.length];
     Librarian p[] = new Librarian[2];
 
@@ -68,14 +69,14 @@ public class App extends Application {
         b[18] = new Books("think like a monk", "Jay Shetty", "2019", "img/avatar.jpeg");
         b[19] = new Books("The Silver Chair", "C.S.Lewis", "1953", "img/avatar.jpeg");
 
+        for (int j = 0; j < b.length; j++) {
+            orgBooks[j] = b[j];
+        }
+
         p[0] = new Librarian("21P0223", "k", "Librarian", "Karim", "Sherif", "heliopolis",
                 "karim", "01112653391", false);
         p[1] = new Librarian("21P0064", "o", "Librarian", "Omar", "Korkor", "nozha",
                 "omar", "01112653391", false);
-
-        for (int i = 0; i < b.length; i++) {
-            orgBooks[i] = b[i];
-        }
 
         FirstScene = CreateFirstScene();
         ShowScene(FirstScene);
@@ -87,11 +88,12 @@ public class App extends Application {
     void ShowScene(Scene scene) {
         stage.setTitle("Library Management System");
         stage.setScene(scene);
+        // stage.setMaximized(true);
         stage.show();
+
     }
 
     private Scene CreateFirstScene() {
-
         Text title = new Text("Welcome to Library Management System");
         title.setFont(Font.font("Arial", FontWeight.BOLD, 50));
         // librarians buttons
@@ -277,6 +279,7 @@ public class App extends Application {
         StackPane stackPane = new StackPane();
         stackPane.getChildren().addAll(rectangle, gridPane);
         stackPane.setPrefSize(rectangle.getWidth(), rectangle.getHeight());
+
         return new Scene(stackPane, 1200, 600);
     }
 
@@ -357,18 +360,12 @@ public class App extends Application {
         myProfileButton.setFont(Font.font("Arial", 17));
         myProfileButton.setPrefWidth(200);
         myProfileButton.setOnAction(event -> {
-            GridPane profileGridPane = profile(LoggedInUser, borderPane);
+            BorderPane profileGridPane = profile(LoggedInUser, borderPane);
             borderPane.setCenter(profileGridPane);
         });
 
         Button usersButton = new Button("Users");
         usersButton.setStyle("-fx-background-color: #333333; -fx-text-fill: white;");
-        // usersButton.setOnMouseEntered(
-        // e -> myProfileButton.setStyle("-fx-background-color: #555555; -fx-text-fill:
-        // white;"));
-        // usersButton.setOnMouseExited(
-        // e -> myProfileButton.setStyle("-fx-background-color: #333333; -fx-text-fill:
-        // white;"));
         usersButton.setFont(Font.font("Arial", 17));
         usersButton.setPrefWidth(200);
         usersButton.setOnAction(event -> {
@@ -378,12 +375,6 @@ public class App extends Application {
 
         Button booksButton = new Button("Books");
         booksButton.setStyle("-fx-background-color: #333333; -fx-text-fill: white;");
-        // booksButton.setOnMouseEntered(
-        // e -> myProfileButton.setStyle("-fx-background-color: #555555; -fx-text-fill:
-        // white;"));
-        // booksButton.setOnMouseExited(
-        // e -> myProfileButton.setStyle("-fx-background-color: #333333; -fx-text-fill:
-        // white;"));
         booksButton.setFont(Font.font("Arial", 17));
         booksButton.setPrefWidth(200);
         booksButton.setOnAction(event -> {
@@ -398,28 +389,6 @@ public class App extends Application {
         signOutButton.setOnAction(event -> {
             ShowScene(FirstScene);
         });
-
-        // myProfileButton.setOnMouseClicked(event -> {
-        // myProfileButton.setStyle("-fx-background-color: #666666; -fx-text-fill:
-        // white;");
-        // usersButton.setStyle("-fx-background-color: #333333; -fx-text-fill: white;");
-        // booksButton.setStyle("-fx-background-color: #333333; -fx-text-fill: white;");
-        // });
-
-        // usersButton.setOnMouseClicked(event -> {
-        // usersButton.setStyle("-fx-background-color: #666666; -fx-text-fill: white;");
-        // myProfileButton.setStyle("-fx-background-color: #333333; -fx-text-fill:
-        // white;");
-        // booksButton.setStyle("-fx-background-color: #333333; -fx-text-fill: white;");
-        // });
-
-        // booksButton.setOnMouseClicked(event -> {
-
-        // booksButton.setStyle("-fx-background-color: #666666; -fx-text-fill: white;");
-        // myProfileButton.setStyle("-fx-background-color: #333333; -fx-text-fill:
-        // white;");
-        // usersButton.setStyle("-fx-background-color: #333333; -fx-text-fill: white;");
-        // });
         // make button by default clicked
         myProfileButton.requestFocus();
         myProfileButton.fire();
@@ -432,12 +401,14 @@ public class App extends Application {
 
     }
 
-    private GridPane profile(int LoggedInUser, BorderPane borderPane) {
-        GridPane gridPane = new GridPane();
+    public BorderPane profile(int LoggedInUser, BorderPane borderPane) {
+        GridPane profileGridPane = new GridPane();
+        GridPane rentedGridPane = new GridPane();
+        rentedGridPane.setHgap(50);
+        rentedGridPane.setVgap(20);
 
-        gridPane.setHgap(80);
-        gridPane.setVgap(20);
-        gridPane.setPadding(new Insets(20, 20, 20, 20));
+        profileGridPane.setVgap(20);
+        profileGridPane.setPadding(new Insets(20, 20, 20, 20));
 
         Text personal = new Text("Personal Information");
         personal.setFont(Font.font("Arial", FontWeight.BOLD, 40));
@@ -494,22 +465,23 @@ public class App extends Application {
 
         rentedBox.getChildren().add(Rented);
         rentedBox.setSpacing(30);
-        rentedBox.setPadding(new Insets(10));
-        gridPane.add(personal, 0, 0);
-        gridPane.add(idBox, 0, 1);
-        gridPane.add(nameBox, 0, 2);
-        gridPane.add(emailBox, 0, 3);
-        gridPane.add(addressBox, 0, 4);
-        gridPane.add(phoneBox, 0, 5);
-        gridPane.add(typeBox, 0, 6);
-        gridPane.add(rentedBox, 1, 0);
+        rentedBox.setPadding(new Insets(20));
+        profileGridPane.add(personal, 0, 0);
+        profileGridPane.add(idBox, 0, 1);
+        profileGridPane.add(nameBox, 0, 2);
+        profileGridPane.add(emailBox, 0, 3);
+        profileGridPane.add(addressBox, 0, 4);
+        profileGridPane.add(phoneBox, 0, 5);
+        profileGridPane.add(typeBox, 0, 6);
 
         for (int i = 0; i < 6; i++) {
             RowConstraints row = new RowConstraints(50);
-            gridPane.getRowConstraints().add(row);
+            profileGridPane.getRowConstraints().add(row);
         }
-
-        p[LoggedInUser].DisplayRentedBooks(p, LoggedInUser, gridPane);
+        for (int i = 0; i < 6; i++) {
+            ColumnConstraints row = new ColumnConstraints(200);
+            rentedGridPane.getColumnConstraints().add(row);
+        }
 
         // print array of rented books
         // for (int i = 0; i < p[LoggedInUser].getRentedBooks().length; i++) {
@@ -518,8 +490,17 @@ public class App extends Application {
 
         // }
         // }
+        BorderPane borderPane2 = new BorderPane();
+        borderPane2.setLeft(profileGridPane);
+        BorderPane borderPane3 = new BorderPane();
+        borderPane3.setTop(rentedBox);
 
-        return gridPane;
+        ScrollPane scrollPane = new ScrollPane(rentedGridPane);
+        borderPane3.setCenter(scrollPane);
+        borderPane2.setCenter(borderPane3);
+        p[LoggedInUser].DisplayRentedBooks(p, LoggedInUser, rentedGridPane, scrollPane);
+
+        return borderPane2;
     }
 
     private GridPane users(int LoggedInUser) {
@@ -527,7 +508,7 @@ public class App extends Application {
         return gridPane;
     }
 
-    private ScrollPane books(int LoggedInUser, BorderPane borderPane) {
+    public ScrollPane books(int LoggedInUser, BorderPane borderPane) {
 
         GridPane gridPane = new GridPane();
         gridPane.setHgap(15);
@@ -535,7 +516,7 @@ public class App extends Application {
         int col = 0;
 
         for (int i = 0; i < b.length; i++) {
-            final int index = i;// setonaction msh radia ta5od 3'ir final?
+            final int index = i;// setonaction msh radia ta5od 3'ir final? tb ezzay w final mabtt3'airsh!!!
 
             ImageView imageView = new ImageView(b[i].getImage());
             imageView.setFitWidth(120);
@@ -547,32 +528,33 @@ public class App extends Application {
             Text Date = new Text(b[i].getPublishDate());
             Date.setFont(Font.font("Arial", 10));
 
-            VBox bookInfo = new VBox();
-            bookInfo.setSpacing(10);
-            bookInfo.setPadding(new Insets(10));
-            bookInfo.setAlignment(Pos.CENTER);
-
             Button deleteBook = new Button("Delete");
             Button rentBook = new Button("Rent");
             HBox buttons = new HBox(rentBook, deleteBook);
             buttons.setAlignment(Pos.CENTER);
             buttons.setSpacing(10);
 
+            VBox bookInfo = new VBox(imageView, bookName, bookAuthor, Date, buttons);
+            bookInfo.setSpacing(10);
+            bookInfo.setPadding(new Insets(10));
+            bookInfo.setAlignment(Pos.CENTER);
+
             rentBook.setOnAction(e -> {
                 p[LoggedInUser].RentBook(p, b, LoggedInUser, index);
-                GridPane profileGridPane = profile(LoggedInUser, borderPane);
+                BorderPane profileGridPane = profile(LoggedInUser, borderPane);
                 borderPane.setCenter(profileGridPane);
+
             });
 
             deleteBook.setOnAction(e -> {
-                b = p[LoggedInUser].DeleteBook(bookInfo, b, index, bookName, bookAuthor, Date, buttons);
+                b = p[LoggedInUser].DeleteBook(gridPane, bookInfo, b, index);
                 ScrollPane booksGridPane = books(LoggedInUser, borderPane);
                 borderPane.setCenter(booksGridPane);
+                orgBooks = Arrays.copyOf(b, b.length);
+
             });
 
-            bookInfo.getChildren().addAll(imageView, bookName, bookAuthor, Date, buttons);
-
-            // 5 books per row
+            // 7 books per column
             if (col % 7 == 0) {
                 row++;
                 col = 0;
@@ -585,6 +567,8 @@ public class App extends Application {
 
         Button addBook = new Button("Add Book");
         addBook.setOnAction(e -> {
+            b = orgBooks;// solves the problem of adding book during search
+            // without the books was being added to the search results not the originalarray
 
             Label nameLabel = new Label("Book Name");
             TextField nameField = new TextField();
@@ -619,10 +603,10 @@ public class App extends Application {
                 // trigger scroll to bottom
                 double maxValue = addBookScrollPane.getVmax();
                 addBookScrollPane.setVvalue(maxValue);
+                orgBooks = Arrays.copyOf(b, b.length);
             });
 
         });
-        gridPane.add(addBook, 3, 0);
 
         Button searchButton = new Button("search");
 
