@@ -18,6 +18,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -34,9 +36,11 @@ public class App extends Application {
     private Scene SecondSceneR;
     private Scene SecondSceneL;
     private Scene ThirdSceneR;
+    int LoggedInUser;
     Books b[] = new Books[20];
     Books orgBooks[] = new Books[b.length];
     Librarian p[] = new Librarian[2];
+    // Rectangle2D screenSize;
 
     public static void main(String[] args) {
 
@@ -46,6 +50,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        // screenSize = Screen.getPrimary().getVisualBounds();
         stage = primaryStage;
 
         b[0] = new Books("The Alchemist", "Paulo Coelho", "1988", "img/avatar.jpeg");
@@ -79,18 +84,16 @@ public class App extends Application {
                 "omar", "01112653391", false);
 
         FirstScene = CreateFirstScene();
-        ShowScene(FirstScene);
-        SecondSceneR = Librarian_SignIn_Scene();
-        SecondSceneL = Reader_SignIn_Scene();
+        showScene(FirstScene);
+        SecondSceneL = Librarian_SignIn_Scene();
+        SecondSceneR = Reader_SignIn_Scene();
 
     }
 
-    void ShowScene(Scene scene) {
+    void showScene(Scene scene) {
         stage.setTitle("Library Management System");
         stage.setScene(scene);
-        // stage.setMaximized(true);
         stage.show();
-
     }
 
     private Scene CreateFirstScene() {
@@ -134,7 +137,7 @@ public class App extends Application {
         Lsignin.setGraphic(LibVbox);
 
         Lsignin.setOnAction(e -> {
-            ShowScene(SecondSceneR);
+            showScene(SecondSceneL);
         });
 
         // readers buttons
@@ -174,7 +177,7 @@ public class App extends Application {
 
         Rsignin.setOnAction(e -> {
 
-            ShowScene(SecondSceneL);
+            showScene(SecondSceneR);
         });
 
         HBox row0 = new HBox();
@@ -194,6 +197,7 @@ public class App extends Application {
     }
 
     private Scene Librarian_SignIn_Scene() {
+
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setHgap(10);
@@ -204,7 +208,7 @@ public class App extends Application {
         HBox backHBox = new HBox(backButton);
         backHBox.setAlignment(Pos.CENTER);
         backButton.setOnAction(event -> {
-            ShowScene(FirstScene);
+            showScene(FirstScene);
         });
 
         Text text = new Text("Librarian Sign in");
@@ -229,15 +233,14 @@ public class App extends Application {
 
         signInButton.setOnAction(event -> {
             // Boolean LoggedIn = false;
-            // int LoggedInUser = 0;
             // for (int i = 0; i < p.length; i++) {
 
             // if (emailField.getText().equals(p[i].getEmail())
             // && passwordField.getText().equals(p[i].getPassword()) &&
             // p[i].getType().equals("Librarian")) {
             // LoggedInUser = i;
-            // ThirdSceneR = LibrarianScene(LoggedInUser);
-            // ShowScene(ThirdSceneR);
+            // ThirdSceneR = LibrarianScene();
+            // showScene(ThirdSceneR);
             // LoggedIn = true;
             // break;
 
@@ -256,9 +259,8 @@ public class App extends Application {
 
             // }
 
-            int LoggedInUser = 0;
-            ThirdSceneR = LibrarianScene(LoggedInUser);
-            ShowScene(ThirdSceneR);
+            ThirdSceneR = LibrarianScene();
+            showScene(ThirdSceneR);
 
         });
 
@@ -294,7 +296,7 @@ public class App extends Application {
         HBox backHBox = new HBox(backButton);
         backHBox.setAlignment(Pos.CENTER);
         backButton.setOnAction(event -> {
-            ShowScene(FirstScene);
+            showScene(FirstScene);
         });
 
         Text text = new Text("Reader Sign in");
@@ -338,7 +340,7 @@ public class App extends Application {
 
     }
 
-    private Scene LibrarianScene(int LoggedInUser) {
+    private Scene LibrarianScene() {
         BorderPane borderPane = new BorderPane();
         HBox navbar = new HBox();
         navbar.setPrefHeight(40);
@@ -351,16 +353,11 @@ public class App extends Application {
 
         Button myProfileButton = new Button("My Profile");
         myProfileButton.setStyle("-fx-background-color: #333333; -fx-text-fill: white;");
-        // myProfileButton.setOnMouseEntered(
-        // e -> myProfileButton.setStyle("-fx-background-color: #555555; -fx-text-fill:
-        // white;"));
-        // myProfileButton.setOnMouseExited(
-        // e -> myProfileButton.setStyle("-fx-background-color: #333333; -fx-text-fill:
-        // white;"));
+
         myProfileButton.setFont(Font.font("Arial", 17));
         myProfileButton.setPrefWidth(200);
         myProfileButton.setOnAction(event -> {
-            BorderPane profileGridPane = profile(LoggedInUser, borderPane);
+            BorderPane profileGridPane = profile(borderPane);
             borderPane.setCenter(profileGridPane);
         });
 
@@ -369,7 +366,7 @@ public class App extends Application {
         usersButton.setFont(Font.font("Arial", 17));
         usersButton.setPrefWidth(200);
         usersButton.setOnAction(event -> {
-            GridPane usersGridPane = users(LoggedInUser);
+            GridPane usersGridPane = users();
             borderPane.setCenter(usersGridPane);
         });
 
@@ -378,8 +375,8 @@ public class App extends Application {
         booksButton.setFont(Font.font("Arial", 17));
         booksButton.setPrefWidth(200);
         booksButton.setOnAction(event -> {
-            ScrollPane booksGridPane = books(LoggedInUser, borderPane);
-            borderPane.setCenter(booksGridPane);
+            BorderPane booksBorderPane = books(borderPane);
+            borderPane.setCenter(booksBorderPane);
         });
 
         Button signOutButton = new Button("Sign Out");
@@ -387,13 +384,25 @@ public class App extends Application {
         signOutButton.setFont(Font.font("Arial", 17));
         signOutButton.setPrefWidth(200);
         signOutButton.setOnAction(event -> {
-            ShowScene(FirstScene);
+
+            showScene(FirstScene);
         });
+
+        Button cartButton = new Button("Cart");
+        cartButton.setStyle("-fx-background-color: #333333; -fx-text-fill: white;");
+        cartButton.setFont(Font.font("Arial", 17));
+        cartButton.setPrefWidth(200);
+        cartButton.setOnAction(event -> {
+            BorderPane cartScrollPane = Cart(borderPane);
+            cartScrollPane.setPrefWidth(300);
+            borderPane.setRight(cartScrollPane);
+        });
+
         // make button by default clicked
         myProfileButton.requestFocus();
         myProfileButton.fire();
         navbar.setAlignment(Pos.CENTER);
-        navbar.getChildren().addAll(title, myProfileButton, usersButton, booksButton, signOutButton);
+        navbar.getChildren().addAll(title, myProfileButton, usersButton, booksButton, cartButton, signOutButton);
 
         borderPane.setTop(navbar);
         Scene scene = new Scene(borderPane, 1200, 600);
@@ -401,7 +410,7 @@ public class App extends Application {
 
     }
 
-    public BorderPane profile(int LoggedInUser, BorderPane borderPane) {
+    public BorderPane profile(BorderPane borderPane) {
         GridPane profileGridPane = new GridPane();
         GridPane rentedGridPane = new GridPane();
         rentedGridPane.setHgap(50);
@@ -503,14 +512,17 @@ public class App extends Application {
         return borderPane2;
     }
 
-    private GridPane users(int LoggedInUser) {
+    private GridPane users() {
         GridPane gridPane = new GridPane();
         return gridPane;
     }
 
-    public ScrollPane books(int LoggedInUser, BorderPane borderPane) {
-
+    public BorderPane books(BorderPane borderPane) {
+        BorderPane borderPaneBooks = new BorderPane();
+        ScrollPane scrollPaneBooks = new ScrollPane();
         GridPane gridPane = new GridPane();
+
+        gridPane.setAlignment(Pos.CENTER);
         gridPane.setHgap(15);
         int row = 1;
         int col = 0;
@@ -541,21 +553,22 @@ public class App extends Application {
 
             rentBook.setOnAction(e -> {
                 p[LoggedInUser].RentBook(p, b, LoggedInUser, index);
-                BorderPane profileGridPane = profile(LoggedInUser, borderPane);
-                borderPane.setCenter(profileGridPane);
+                BorderPane cartScrollPane = Cart(borderPane);
+                cartScrollPane.setPrefWidth(300);
+                borderPane.setRight(cartScrollPane);
 
             });
 
             deleteBook.setOnAction(e -> {
                 b = p[LoggedInUser].DeleteBook(gridPane, bookInfo, b, index);
-                ScrollPane booksGridPane = books(LoggedInUser, borderPane);
+                BorderPane booksGridPane = books(borderPane);
                 borderPane.setCenter(booksGridPane);
                 orgBooks = Arrays.copyOf(b, b.length);
 
             });
 
             // 7 books per column
-            if (col % 7 == 0) {
+            if (col % 5 == 0) {
                 row++;
                 col = 0;
             }
@@ -598,24 +611,29 @@ public class App extends Application {
                         publishDateField.getText());
                 addBookStage.close();
 
-                ScrollPane addBookScrollPane = books(LoggedInUser, borderPane);
+                BorderPane addBookScrollPane = books(borderPane);
                 borderPane.setCenter(addBookScrollPane);
+
                 // trigger scroll to bottom
-                double maxValue = addBookScrollPane.getVmax();
-                addBookScrollPane.setVvalue(maxValue);
-                orgBooks = Arrays.copyOf(b, b.length);
+                double maxValue = scrollPaneBooks.getVmax();
+                scrollPaneBooks.setVvalue(maxValue);
+
+                orgBooks = Arrays.copyOf(b, b.length);// update orgBooks array
             });
 
         });
 
         Button searchButton = new Button("search");
-
         TextField searchField = new TextField();
+
         HBox searchBox = new HBox(searchField, searchButton);
         searchBox.setSpacing(10);
-        HBox s = new HBox(addBook, searchBox);
-        s.setSpacing(800);
-        s.setPadding(new Insets(20, 20, 20, 20));
+        Region region = new Region();
+        HBox.setHgrow(region, Priority.ALWAYS);
+        HBox Add_Search = new HBox(addBook, region, searchBox);
+        // Add_Search.setSpacing(800);
+
+        Add_Search.setPadding(new Insets(20, 20, 20, 20));
 
         searchButton.setOnAction(e -> {
 
@@ -628,28 +646,55 @@ public class App extends Application {
                 errorBox.setPadding(new Insets(20, 20, 20, 20));
                 errorBox.setAlignment(Pos.CENTER);
 
-                VBox sr = new VBox(s, errorBox);
+                VBox sr = new VBox(Add_Search, errorBox);
                 sr.setSpacing(40);
 
                 borderPane.setCenter(sr);
 
             } else {
-                ScrollPane booksGridPane = books(LoggedInUser, borderPane);
+                BorderPane booksGridPane = books(borderPane);
                 borderPane.setCenter(booksGridPane);
             }
 
         });
 
-        BorderPane borderPaneBooks = new BorderPane();
-        borderPaneBooks.setCenter(gridPane);
+        scrollPaneBooks.setContent(gridPane);
+        scrollPaneBooks.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); // Disable horizontal scroll bar
+        scrollPaneBooks.setFitToWidth(true);
+        scrollPaneBooks.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
 
-        borderPaneBooks.setTop(s);
+        borderPaneBooks.setCenter(scrollPaneBooks);
 
-        ScrollPane scrollPane = new ScrollPane(borderPaneBooks);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        borderPaneBooks.setTop(Add_Search);
 
-        return scrollPane;
+        return borderPaneBooks;
     }
 
+    public BorderPane Cart(BorderPane borderPane) {
+        BorderPane borderPane2 = new BorderPane();
+
+        Text cart = new Text("Cart");
+        cart.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+        Button hideButton = new Button("X");
+        hideButton.setOnAction(event -> {
+            borderPane.setRight(null);
+        });
+        Region region = new Region();
+        HBox.setHgrow(region, Priority.ALWAYS);
+        borderPane2.setTop(new HBox(cart, region, hideButton));
+
+        GridPane gridPane = new GridPane();
+        gridPane.setVgap(10);
+        gridPane.setPadding(new Insets(20, 20, 20, 20));
+        ScrollPane scrollPane = new ScrollPane(gridPane);
+
+        p[LoggedInUser].CartRentedBooks(p, LoggedInUser, gridPane);
+        Text total = new Text("Total: ");
+        total.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+
+        borderPane2.setBottom(total);
+        borderPane2.setCenter(scrollPane);
+
+        return borderPane2;
+    }
 }

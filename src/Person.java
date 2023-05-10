@@ -1,4 +1,4 @@
-public class Person {
+public abstract class Person {
     private String ID;
     private String Password;
     private String Type;
@@ -100,5 +100,7 @@ public class Person {
     public void setIsBlocked(boolean isBlocked) {
         this.isBlocked = isBlocked;
     }
+
+    public abstract void RentBook(Librarian p[], Books b[], int LoggedInUser, int index);
 
 }

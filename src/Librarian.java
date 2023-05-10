@@ -1,12 +1,14 @@
 import java.util.Arrays;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-
 import javafx.scene.text.Text;
 
 public class Librarian extends Person {
@@ -46,6 +48,25 @@ public class Librarian extends Person {
         return newB;
     }
 
+    // overloading the delete book method to work with HBox
+    public Books[] DeleteBook(GridPane gridpane, HBox bookinfo, Books b[], int index) {
+        // remove from GUI
+        gridpane.getChildren().remove(bookinfo);
+
+        // remove from array
+        Books newB[] = new Books[b.length - 1];
+        int c = 0;
+
+        for (int d = 0; d < b.length; d++) {
+            if (d != index) {
+                newB[c] = b[d];
+                c++;
+            }
+        }
+
+        return newB;
+    }
+
     // called in the book scene & it adds the book to the rented books array
     public void RentBook(Librarian p[], Books b[], int LoggedInUser, int index) {
         for (int j = 0; j < p[LoggedInUser].getRentedBooks().length; j++) {
@@ -55,12 +76,11 @@ public class Librarian extends Person {
             }
 
         }
-
     }
 
     // called in the profile scene & it displays the rented books array as gui
     public void DisplayRentedBooks(Librarian p[], int LoggedInUser, GridPane gridPane, ScrollPane scrollPane) {
-        VBox rentedVBox;
+        // VBox rentedVBox;
         int row = 1;
         int col = 0;
         for (int j = 0; j < p[LoggedInUser].getRentedBooks().length; j++) {
@@ -79,8 +99,14 @@ public class Librarian extends Person {
                 Text rentedDate = new Text(p[LoggedInUser].getRentedBooks()[j].getPublishDate());
 
                 rentedDate.setStyle("-fx-font: 13 arial;");
-                rentedVBox = new VBox();
-                rentedVBox.getChildren().addAll(imageView, rentedName, rentedAuther, rentedDate);
+                Button returnButton = new Button("Return");
+
+                VBox rentedVBox = new VBox(imageView, rentedName, rentedAuther, rentedDate, returnButton);
+                final int index = j;
+                returnButton.setOnAction(e -> {
+                    rentedBooks = DeleteBook(gridPane, rentedVBox, rentedBooks, index);
+                });
+
                 rentedVBox.setAlignment(Pos.CENTER);
 
                 gridPane.add(rentedVBox, col, row);
@@ -93,6 +119,48 @@ public class Librarian extends Person {
                 // trigger scroll to bottom
                 double maxValue = scrollPane.getVmax();
                 scrollPane.setVvalue(maxValue);
+
+            }
+
+        }
+    }
+
+    public void CartRentedBooks(Librarian p[], int LoggedInUser, GridPane gridPane) {
+        // VBox rentedVBox;
+        int row = 0;
+        int col = 0;
+        for (int j = 0; j < p[LoggedInUser].getRentedBooks().length; j++) {
+
+            if (p[LoggedInUser].getRentedBooks()[j] != null) {
+                ImageView imageView = new ImageView(p[LoggedInUser].getRentedBooks()[j].getImage());
+                imageView.setFitWidth(60);
+                imageView.setFitHeight(100);
+
+                Text rentedName = new Text(p[LoggedInUser].getRentedBooks()[j].getName());
+                rentedName.setStyle("-fx-font: 13 arial;-fx-font-weight: bold;");
+
+                Text rentedDate = new Text(p[LoggedInUser].getRentedBooks()[j].getPublishDate());
+
+                rentedDate.setStyle("-fx-font: 13 arial;");
+                Button deleteButton = new Button("Delete");
+
+                VBox rentedVBox = new VBox(rentedName, rentedDate);
+                rentedVBox.setAlignment(Pos.CENTER);
+                Region region = new Region();
+                HBox.setHgrow(region, Priority.ALWAYS);
+
+                HBox rentedHBox = new HBox(imageView, rentedVBox, region, deleteButton);
+                rentedHBox.setAlignment(Pos.CENTER_LEFT);
+
+                final int index = j;
+                deleteButton.setOnAction(e -> {
+                    rentedBooks = DeleteBook(gridPane, rentedHBox, rentedBooks, index);
+                });
+
+                rentedHBox.setAlignment(Pos.CENTER);
+
+                gridPane.add(rentedHBox, col, row);
+                row++;
 
             }
 
