@@ -4,19 +4,19 @@ public class Books {
     private Image image;
     private String Name;
     private String Author;
-    private String publishDate;
+    private int Price;
 
-    public Books(String Name, String Author, String publishDate, String imagePath) {
+    public Books(String Name, String Author, int Price, String imagePath) {
         this.Name = Name;
         this.Author = Author;
-        this.publishDate = publishDate;
+        this.Price = Price;
         this.image = new Image(imagePath);
     }
 
-    public Books(String Name, String Author, String publishDate) {
+    public Books(String Name, String Author, int Price) {
         this.Name = Name;
         this.Author = Author;
-        this.publishDate = publishDate;
+        this.Price = Price;
 
     }
 
@@ -36,12 +36,8 @@ public class Books {
         this.Author = Author;
     }
 
-    public String getPublishDate() {
-        return this.publishDate;
-    }
-
-    public void setPublishDate(String publishDate) {
-        this.publishDate = publishDate;
+    public int getPrice() {
+        return this.Price;
     }
 
     public Image getImage() {

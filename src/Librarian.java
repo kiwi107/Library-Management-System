@@ -6,13 +6,17 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
+
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 public class Librarian extends Person {
     private Books rentedBooks[];
+    private int total = 0;
+
+    public int getTotal() {
+        return this.total;
+    }
 
     public Librarian() {
         super();
@@ -21,12 +25,17 @@ public class Librarian extends Person {
     public Librarian(String ID, String Password, String Type, String FirstName, String LastName, String Address,
             String Email, String CellPhone, boolean isBlocked) {
         super(ID, Password, Type, FirstName, LastName, Address, Email, CellPhone, isBlocked);
-        rentedBooks = new Books[10];
+        rentedBooks = new Books[20];
 
     }
 
     public Books[] getRentedBooks() {
         return this.rentedBooks;
+    }
+
+    // setter for rented books
+    public void setRentedBooks(Books[] rentedBooks) {
+        this.rentedBooks = rentedBooks;
     }
 
     // called in the book scene & creates a new book array with size -1
@@ -49,7 +58,7 @@ public class Librarian extends Person {
     }
 
     // overloading the delete book method to work with HBox
-    public Books[] DeleteBook(GridPane gridpane, HBox bookinfo, Books b[], int index) {
+    public Books[] DeleteBook(Librarian p[], int LoggedInUser, GridPane gridpane, HBox bookinfo, Books b[], int index) {
         // remove from GUI
         gridpane.getChildren().remove(bookinfo);
 
@@ -61,8 +70,11 @@ public class Librarian extends Person {
             if (d != index) {
                 newB[c] = b[d];
                 c++;
+
             }
+
         }
+        total = total - p[LoggedInUser].getRentedBooks()[index].getPrice();
 
         return newB;
     }
@@ -72,10 +84,12 @@ public class Librarian extends Person {
         for (int j = 0; j < p[LoggedInUser].getRentedBooks().length; j++) {
             if (p[LoggedInUser].getRentedBooks()[j] == null) {
                 p[LoggedInUser].getRentedBooks()[j] = b[index];
+                total = total + p[LoggedInUser].getRentedBooks()[j].getPrice();
                 break;
             }
 
         }
+
     }
 
     // called in the profile scene & it displays the rented books array as gui
@@ -96,7 +110,7 @@ public class Librarian extends Person {
                 Text rentedAuther = new Text(p[LoggedInUser].getRentedBooks()[j].getAuthor());
 
                 rentedAuther.setStyle("-fx-font: 13 arial;");
-                Text rentedDate = new Text(p[LoggedInUser].getRentedBooks()[j].getPublishDate());
+                Text rentedDate = new Text(String.valueOf(p[LoggedInUser].getRentedBooks()[j].getPrice()));
 
                 rentedDate.setStyle("-fx-font: 13 arial;");
                 Button returnButton = new Button("Return");
@@ -117,64 +131,22 @@ public class Librarian extends Person {
                     row++;
                 }
                 // trigger scroll to bottom
-                double maxValue = scrollPane.getVmax();
-                scrollPane.setVvalue(maxValue);
+                // double maxValue = scrollPane.getVmax();
+                // scrollPane.setVvalue(maxValue);
 
             }
 
         }
     }
 
-    public void CartRentedBooks(Librarian p[], int LoggedInUser, GridPane gridPane) {
-        // VBox rentedVBox;
-        int row = 0;
-        int col = 0;
-        for (int j = 0; j < p[LoggedInUser].getRentedBooks().length; j++) {
-
-            if (p[LoggedInUser].getRentedBooks()[j] != null) {
-                ImageView imageView = new ImageView(p[LoggedInUser].getRentedBooks()[j].getImage());
-                imageView.setFitWidth(60);
-                imageView.setFitHeight(100);
-
-                Text rentedName = new Text(p[LoggedInUser].getRentedBooks()[j].getName());
-                rentedName.setStyle("-fx-font: 13 arial;-fx-font-weight: bold;");
-
-                Text rentedDate = new Text(p[LoggedInUser].getRentedBooks()[j].getPublishDate());
-
-                rentedDate.setStyle("-fx-font: 13 arial;");
-                Button deleteButton = new Button("Delete");
-
-                VBox rentedVBox = new VBox(rentedName, rentedDate);
-                rentedVBox.setAlignment(Pos.CENTER);
-                Region region = new Region();
-                HBox.setHgrow(region, Priority.ALWAYS);
-
-                HBox rentedHBox = new HBox(imageView, rentedVBox, region, deleteButton);
-                rentedHBox.setAlignment(Pos.CENTER_LEFT);
-
-                final int index = j;
-                deleteButton.setOnAction(e -> {
-                    rentedBooks = DeleteBook(gridPane, rentedHBox, rentedBooks, index);
-                });
-
-                rentedHBox.setAlignment(Pos.CENTER);
-
-                gridPane.add(rentedHBox, col, row);
-                row++;
-
-            }
-
-        }
-    }
-
-    public Books[] AddBook(Books b[], String name, String author, String publishDate) {
+    public Books[] AddBook(Books b[], String name, String author, int price) {
         Books newBook[] = new Books[b.length + 1];
         for (int j = 0; j < b.length; j++) {
 
             newBook[j] = b[j];
 
         }
-        newBook[b.length] = new Books(name, author, publishDate);
+        newBook[b.length] = new Books(name, author, price);
         return newBook;
 
     }

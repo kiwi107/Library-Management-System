@@ -15,7 +15,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -53,26 +52,26 @@ public class App extends Application {
         // screenSize = Screen.getPrimary().getVisualBounds();
         stage = primaryStage;
 
-        b[0] = new Books("The Alchemist", "Paulo Coelho", "1988", "img/avatar.jpeg");
-        b[1] = new Books("Little Women", "Louisa May", "1968", "img/avatar.jpeg");
-        b[2] = new Books("Harry Potter", "J.K.Rowling", "1997", "img/avatar.jpeg");
-        b[3] = new Books("The Lord of the Rings", "J.R.R.Tolkien", "1954", "img/avatar.jpeg");
-        b[4] = new Books("The Hobbit", "J.R.R.Tolkien", "1937", "img/avatar.jpeg");
-        b[5] = new Books("The Da Vinci Code", "Dan Brown", "2003", "img/avatar.jpeg");
-        b[6] = new Books("Redeeming Love", "Francine Rivers", "1991", "img/avatar.jpeg");
-        b[7] = new Books("The Hunger Games", "Suzanne Collins", "2008", "img/avatar.jpeg");
-        b[8] = new Books("The Maze Runner", "James Dashner", "2009", "img/avatar.jpeg");
-        b[9] = new Books("The Fault in Our Stars", "John Green", "2012", "img/avatar.jpeg");
-        b[10] = new Books("Avatar the last airbender", "Michael Dante DiMartino", "2005", "img/avatar.jpeg");
-        b[11] = new Books("The Twilight Saga", "Stephenie Meyer", "2005", "img/avatar.jpeg");
-        b[12] = new Books("it ends with us", "Colleen Hoover", "2016", "img/avatar.jpeg");
-        b[13] = new Books("Confess", "Colleen Hoover", "2016", "img/avatar.jpeg");
-        b[14] = new Books("The Book of Three", "Lloyd Alexander", "1964", "img/avatar.jpeg");
-        b[15] = new Books("The Chronicles of Narnia", "C.S.Lewis", "1950", "img/avatar.jpeg");
-        b[16] = new Books("Atomic Habits", "James Clear", "2018", "img/avatar.jpeg");
-        b[17] = new Books("The Magician's Nephew", "C.S.Lewis", "1955", "img/avatar.jpeg");
-        b[18] = new Books("think like a monk", "Jay Shetty", "2019", "img/avatar.jpeg");
-        b[19] = new Books("The Silver Chair", "C.S.Lewis", "1953", "img/avatar.jpeg");
+        b[0] = new Books("The Alchemist", "Paulo Coelho", 88, "img/avatar.jpeg");
+        b[1] = new Books("Little Women", "Louisa May", 68, "img/avatar.jpeg");
+        b[2] = new Books("Harry Potter", "J.K.Rowling", 19, "img/avatar.jpeg");
+        b[3] = new Books("The Lord of the Rings", "J.R.R.Tolkien", 54, "img/avatar.jpeg");
+        b[4] = new Books("The Hobbit", "J.R.R.Tolkien", 37, "img/avatar.jpeg");
+        b[5] = new Books("The Da Vinci Code", "Dan Brown", 23, "img/avatar.jpeg");
+        b[6] = new Books("Redeeming Love", "Francine Rivers", 99, "img/avatar.jpeg");
+        b[7] = new Books("The Hunger Games", "Suzanne Collins", 28, "img/avatar.jpeg");
+        b[8] = new Books("The Maze Runner", "James Dashner", 29, "img/avatar.jpeg");
+        b[9] = new Books("The Fault in Our Stars", "John Green", 212, "img/avatar.jpeg");
+        b[10] = new Books("Avatar the last airbender", "Michael Dante DiMartino", 25, "img/avatar.jpeg");
+        b[11] = new Books("The Twilight Saga", "Stephenie Meyer", 25, "img/avatar.jpeg");
+        b[12] = new Books("it ends with us", "Colleen Hoover", 216, "img/avatar.jpeg");
+        b[13] = new Books("Confess", "Colleen Hoover", 216, "img/avatar.jpeg");
+        b[14] = new Books("The Book of Three", "Lloyd Alexander", 196, "img/avatar.jpeg");
+        b[15] = new Books("The Chronicles of Narnia", "C.S.Lewis", 1950, "img/avatar.jpeg");
+        b[16] = new Books("Atomic Habits", "James Clear", 218, "img/avatar.jpeg");
+        b[17] = new Books("The Magician's Nephew", "C.S.Lewis", 195, "img/avatar.jpeg");
+        b[18] = new Books("think like a monk", "Jay Shetty", 219, "img/avatar.jpeg");
+        b[19] = new Books("The Silver Chair", "C.S.Lewis", 195, "img/avatar.jpeg");
 
         for (int j = 0; j < b.length; j++) {
             orgBooks[j] = b[j];
@@ -83,10 +82,12 @@ public class App extends Application {
         p[1] = new Librarian("21P0064", "o", "Librarian", "Omar", "Korkor", "nozha",
                 "omar", "01112653391", false);
 
-        FirstScene = CreateFirstScene();
-        showScene(FirstScene);
+        // GUI gui = new GUI(stage, FirstScene);
+
         SecondSceneL = Librarian_SignIn_Scene();
         SecondSceneR = Reader_SignIn_Scene();
+        FirstScene = CreateFirstScene();
+        showScene(FirstScene);
 
     }
 
@@ -115,7 +116,7 @@ public class App extends Application {
         Lsignin.setOnMouseEntered(event -> {
             ScaleTransition scaleTransition = new ScaleTransition();
             scaleTransition.setNode(Lsignin);
-            Lsignin.setStyle("-fx-background-color: #ffffff; -fx-border-color: darkblue; -fx-border-width: 2px;");
+            Lsignin.setStyle("-fx-background-color: #ffffff; -fx-border-color: darkblue;-fx-border-width: 2px;");
             scaleTransition.setDuration(Duration.millis(300));
             scaleTransition.setToX(1.05);
             scaleTransition.setToY(1.05);
@@ -148,12 +149,12 @@ public class App extends Application {
         Text readerText = new Text("Sign in as Reader");
         readerText.setFont(Font.font("Arial", 15));
         Button Rsignin = new Button();
-        Rsignin.setStyle("-fx-background-color: #ffffff;-fx-border-color: black; -fx-border-width: 2px;");
+        Rsignin.setStyle("-fx-background-color: #ffffff;-fx-border-color: black;-fx-border-width: 2px;");
 
         Rsignin.setOnMouseEntered(event -> {
             ScaleTransition scaleTransition = new ScaleTransition();
             scaleTransition.setNode(Rsignin);
-            Rsignin.setStyle("-fx-background-color: #ffffff; -fx-border-color: darkblue; -fx-border-width: 2px;");
+            Rsignin.setStyle("-fx-background-color: #ffffff; -fx-border-color: darkblue;-fx-border-width: 2px;");
 
             scaleTransition.setDuration(Duration.millis(300));
             scaleTransition.setToX(1.05);
@@ -164,7 +165,7 @@ public class App extends Application {
         Rsignin.setOnMouseExited(event -> {
             ScaleTransition scaleTransition = new ScaleTransition();
             scaleTransition.setNode(Rsignin);
-            Rsignin.setStyle("-fx-background-color: #ffffff; -fx-border-color: black; -fx-border-width: 2px;");
+            Rsignin.setStyle("-fx-background-color: #ffffff; -fx-border-color: black;-fx-border-width: 2px;");
             scaleTransition.setDuration(Duration.millis(300));
             scaleTransition.setToX(1.0);
             scaleTransition.setToY(1.0);
@@ -357,8 +358,8 @@ public class App extends Application {
         myProfileButton.setFont(Font.font("Arial", 17));
         myProfileButton.setPrefWidth(200);
         myProfileButton.setOnAction(event -> {
-            BorderPane profileGridPane = profile(borderPane);
-            borderPane.setCenter(profileGridPane);
+            BorderPane infoGridPane = profile(borderPane);
+            borderPane.setCenter(infoGridPane);
         });
 
         Button usersButton = new Button("Users");
@@ -401,6 +402,7 @@ public class App extends Application {
         // make button by default clicked
         myProfileButton.requestFocus();
         myProfileButton.fire();
+
         navbar.setAlignment(Pos.CENTER);
         navbar.getChildren().addAll(title, myProfileButton, usersButton, booksButton, cartButton, signOutButton);
 
@@ -411,16 +413,19 @@ public class App extends Application {
     }
 
     public BorderPane profile(BorderPane borderPane) {
-        GridPane profileGridPane = new GridPane();
+        GridPane infoGridPane = new GridPane();
+        infoGridPane.setPadding(new Insets(20));
+
         GridPane rentedGridPane = new GridPane();
-        rentedGridPane.setHgap(50);
+        rentedGridPane.setHgap(30);
         rentedGridPane.setVgap(20);
+        rentedGridPane.setAlignment(Pos.CENTER);
 
-        profileGridPane.setVgap(20);
-        profileGridPane.setPadding(new Insets(20, 20, 20, 20));
+        infoGridPane.setVgap(20);
 
-        Text personal = new Text("Personal Information");
-        personal.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+        Label infoText = new Label("Personal Info");
+        infoText.setPadding(new Insets(10));
+        infoText.setFont(Font.font("Arial", FontWeight.BOLD, 40));
 
         Font labelFont = Font.font("Arial", FontWeight.BOLD, 20);
         Font valueFont = Font.font("Arial", 20);
@@ -468,28 +473,20 @@ public class App extends Application {
         HBox phoneBox = new HBox(Phone, phoneValue);
         HBox typeBox = new HBox(Type, typeValue);
 
-        VBox rentedBox = new VBox();
-        Text Rented = new Text("Rented Books");
-        Rented.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+        Label rentedText = new Label("Rented Books");
+        rentedText.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+        rentedText.setPadding(new Insets(10));
 
-        rentedBox.getChildren().add(Rented);
-        rentedBox.setSpacing(30);
-        rentedBox.setPadding(new Insets(20));
-        profileGridPane.add(personal, 0, 0);
-        profileGridPane.add(idBox, 0, 1);
-        profileGridPane.add(nameBox, 0, 2);
-        profileGridPane.add(emailBox, 0, 3);
-        profileGridPane.add(addressBox, 0, 4);
-        profileGridPane.add(phoneBox, 0, 5);
-        profileGridPane.add(typeBox, 0, 6);
+        infoGridPane.add(idBox, 0, 0);
+        infoGridPane.add(nameBox, 0, 1);
+        infoGridPane.add(emailBox, 0, 2);
+        infoGridPane.add(addressBox, 0, 3);
+        infoGridPane.add(phoneBox, 0, 4);
+        infoGridPane.add(typeBox, 0, 5);
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 5; i++) {
             RowConstraints row = new RowConstraints(50);
-            profileGridPane.getRowConstraints().add(row);
-        }
-        for (int i = 0; i < 6; i++) {
-            ColumnConstraints row = new ColumnConstraints(200);
-            rentedGridPane.getColumnConstraints().add(row);
+            infoGridPane.getRowConstraints().add(row);
         }
 
         // print array of rented books
@@ -499,17 +496,26 @@ public class App extends Application {
 
         // }
         // }
-        BorderPane borderPane2 = new BorderPane();
-        borderPane2.setLeft(profileGridPane);
-        BorderPane borderPane3 = new BorderPane();
-        borderPane3.setTop(rentedBox);
+        BorderPane infoBorderPane = new BorderPane();
+        infoBorderPane.setTop(infoText);
+        infoBorderPane.setCenter(infoGridPane);
+
+        BorderPane rentedBorderPane = new BorderPane();
+        rentedBorderPane.setTop(rentedText);
 
         ScrollPane scrollPane = new ScrollPane(rentedGridPane);
-        borderPane3.setCenter(scrollPane);
-        borderPane2.setCenter(borderPane3);
+        scrollPane.setFitToWidth(true);
+
+        rentedBorderPane.setCenter(scrollPane);
+
+        BorderPane ProfileborderPane = new BorderPane();
+        ProfileborderPane.setLeft(infoBorderPane);
+        ProfileborderPane.setCenter(rentedBorderPane);
+
+        BorderPane.setMargin(rentedBorderPane, new Insets(0, 0, 0, 50));
         p[LoggedInUser].DisplayRentedBooks(p, LoggedInUser, rentedGridPane, scrollPane);
 
-        return borderPane2;
+        return ProfileborderPane;
     }
 
     private GridPane users() {
@@ -524,7 +530,7 @@ public class App extends Application {
 
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setHgap(15);
-        int row = 1;
+        int row = 0;
         int col = 0;
 
         for (int i = 0; i < b.length; i++) {
@@ -537,8 +543,8 @@ public class App extends Application {
             bookName.setFont(Font.font("Arial", FontWeight.BOLD, 13));
             Text bookAuthor = new Text(b[i].getAuthor());
             bookAuthor.setFont(Font.font("Arial", 10));
-            Text Date = new Text(b[i].getPublishDate());
-            Date.setFont(Font.font("Arial", 10));
+            Text price = new Text(String.valueOf(b[i].getPrice()));
+            price.setFont(Font.font("Arial", 10));
 
             Button deleteBook = new Button("Delete");
             Button rentBook = new Button("Rent");
@@ -546,7 +552,7 @@ public class App extends Application {
             buttons.setAlignment(Pos.CENTER);
             buttons.setSpacing(10);
 
-            VBox bookInfo = new VBox(imageView, bookName, bookAuthor, Date, buttons);
+            VBox bookInfo = new VBox(imageView, bookName, bookAuthor, price, buttons);
             bookInfo.setSpacing(10);
             bookInfo.setPadding(new Insets(10));
             bookInfo.setAlignment(Pos.CENTER);
@@ -589,8 +595,8 @@ public class App extends Application {
             Label autherLabel = new Label("Book Author");
             TextField autherField = new TextField();
 
-            Label publishDateLabel = new Label("Publish Date");
-            TextField publishDateField = new TextField();
+            Label priceLabel = new Label("price");
+            TextField priceField = new TextField();
 
             Button addButton = new Button("Add Book");
             GridPane addBookGridPane = new GridPane();
@@ -598,8 +604,8 @@ public class App extends Application {
             addBookGridPane.add(nameField, 1, 0);
             addBookGridPane.add(autherLabel, 0, 1);
             addBookGridPane.add(autherField, 1, 1);
-            addBookGridPane.add(publishDateLabel, 0, 2);
-            addBookGridPane.add(publishDateField, 1, 2);
+            addBookGridPane.add(priceLabel, 0, 2);
+            addBookGridPane.add(priceField, 1, 2);
             addBookGridPane.add(addButton, 1, 3);
             Stage addBookStage = new Stage();
             Scene addBookScene = new Scene(addBookGridPane, 300, 200);
@@ -608,7 +614,7 @@ public class App extends Application {
 
             addButton.setOnAction(e1 -> {
                 b = p[LoggedInUser].AddBook(b, nameField.getText(), autherField.getText(),
-                        publishDateField.getText());
+                        Integer.parseInt(priceField.getText()));
                 addBookStage.close();
 
                 BorderPane addBookScrollPane = books(borderPane);
@@ -631,7 +637,6 @@ public class App extends Application {
         Region region = new Region();
         HBox.setHgrow(region, Priority.ALWAYS);
         HBox Add_Search = new HBox(addBook, region, searchBox);
-        // Add_Search.setSpacing(800);
 
         Add_Search.setPadding(new Insets(20, 20, 20, 20));
 
@@ -671,30 +676,94 @@ public class App extends Application {
     }
 
     public BorderPane Cart(BorderPane borderPane) {
-        BorderPane borderPane2 = new BorderPane();
+        BorderPane borderPaneCart = new BorderPane();
 
-        Text cart = new Text("Cart");
-        cart.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+        Label cartText = new Label("Cart");
+        cartText.setPadding(new Insets(10));
+
+        cartText.setFont(Font.font("Arial", FontWeight.BOLD, 40));
         Button hideButton = new Button("X");
         hideButton.setOnAction(event -> {
             borderPane.setRight(null);
         });
         Region region = new Region();
         HBox.setHgrow(region, Priority.ALWAYS);
-        borderPane2.setTop(new HBox(cart, region, hideButton));
+        borderPaneCart.setTop(new HBox(cartText, region, hideButton));
 
         GridPane gridPane = new GridPane();
         gridPane.setVgap(10);
-        gridPane.setPadding(new Insets(20, 20, 20, 20));
+        gridPane.setPadding(new Insets(20));
         ScrollPane scrollPane = new ScrollPane(gridPane);
 
-        p[LoggedInUser].CartRentedBooks(p, LoggedInUser, gridPane);
-        Text total = new Text("Total: ");
-        total.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        int row = 0;
+        int col = 0;
+        for (int j = 0; j < p[LoggedInUser].getRentedBooks().length; j++) {
 
-        borderPane2.setBottom(total);
-        borderPane2.setCenter(scrollPane);
+            if (p[LoggedInUser].getRentedBooks()[j] != null) {
+                ImageView imageView = new ImageView(p[LoggedInUser].getRentedBooks()[j].getImage());
+                imageView.setFitWidth(60);
+                imageView.setFitHeight(100);
 
-        return borderPane2;
+                Text rentedName = new Text(p[LoggedInUser].getRentedBooks()[j].getName());
+                rentedName.setStyle("-fx-font: 13 arial;-fx-font-weight: bold;");
+
+                Text rentedDate = new Text(String.valueOf(p[LoggedInUser].getRentedBooks()[j].getPrice()) + " EGP");
+
+                rentedDate.setStyle("-fx-font: 13 arial;");
+                Button deleteButton = new Button("Delete");
+
+                VBox rentedVBox = new VBox(rentedName, rentedDate);
+                rentedVBox.setAlignment(Pos.CENTER);
+                Region region2 = new Region();
+                HBox.setHgrow(region2, Priority.ALWAYS);
+                HBox rentedHBox = new HBox(imageView, rentedVBox, region2, deleteButton);
+                rentedHBox.setAlignment(Pos.CENTER_LEFT);
+                rentedHBox.setPrefWidth(250);
+
+                final int index = j;
+                deleteButton.setOnAction(e -> {
+                    Books f[] = new Books[20];
+                    f = p[LoggedInUser].DeleteBook(p, LoggedInUser, gridPane, rentedHBox,
+                            p[LoggedInUser].getRentedBooks(),
+                            index);
+                    p[LoggedInUser].setRentedBooks(f);
+                    BorderPane cartScrollPane = Cart(borderPane);
+                    cartScrollPane.setPrefWidth(300);
+                    borderPane.setRight(cartScrollPane);
+
+                });
+
+                rentedHBox.setAlignment(Pos.CENTER);
+
+                gridPane.add(rentedHBox, col, row);
+                row++;
+
+            }
+
+        }
+        Label totalText = new Label("Total: " + String.valueOf(p[LoggedInUser].getTotal()) + " EGP");
+        totalText.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        Button checkoutButton = new Button("checkout");
+        checkoutButton.setOnAction(e -> {
+            borderPaneCart.setBottom(null);
+            Label confirmtion = new Label("transcation completed,go to profile to view your books");
+            Button goToProfile = new Button("Go to Profile");
+            goToProfile.setOnAction(e2 -> {
+                BorderPane profileBorderPane = profile(borderPane);
+                borderPane.setCenter(profileBorderPane);
+                borderPaneCart.setCenter(null);
+
+            });
+            VBox confirmtionVBox = new VBox(confirmtion, goToProfile);
+            borderPaneCart.setCenter(confirmtionVBox);
+        });
+        VBox cartButton = new VBox(totalText, checkoutButton);
+        cartButton.setAlignment(Pos.CENTER);
+        checkoutButton.setPadding(new Insets(10));
+        totalText.setPadding(new Insets(10));
+        borderPaneCart.setBottom(cartButton);
+        borderPaneCart.setCenter(scrollPane);
+
+        return borderPaneCart;
     }
 }

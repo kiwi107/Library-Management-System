@@ -101,6 +101,4 @@ public abstract class Person {
         this.isBlocked = isBlocked;
     }
 
-    public abstract void RentBook(Librarian p[], Books b[], int LoggedInUser, int index);
-
 }
