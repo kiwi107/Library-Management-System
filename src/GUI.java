@@ -44,11 +44,10 @@ public class GUI {
     Books orgBooks[];
     int LoggedInUser;
 
-    public GUI(Stage stage, Librarian p[], Books b[], int LoggedInUser, Books orgBooks[]) {
+    public GUI(Stage stage, Librarian p[], Books b[], Books orgBooks[]) {
         this.stage = stage;
         this.p = p;
         this.b = b;
-        this.LoggedInUser = LoggedInUser;
         this.orgBooks = orgBooks;
 
     }
@@ -165,7 +164,7 @@ public class GUI {
         return firstScene;
     }
 
-    public Scene Librarian_SignIn_Scene() {
+    public Scene createSecondScene() {
 
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
@@ -180,8 +179,16 @@ public class GUI {
             showScene(firstScene);
         });
 
-        Text text = new Text("Librarian Sign in");
-        Image Image = new Image("img/Librarians.png");
+        Text text;
+        Image Image;
+
+        if (p[LoggedInUser] instanceof Librarian) {
+            text = new Text("Librarian Sign in");
+            Image = new Image("img/Librarians.png");
+        } else {
+            text = new Text("Reader Sign in");
+            Image = new Image("img/Reader.png");
+        }
         ImageView View = new ImageView(Image);
         View.setFitWidth(300);
         View.setFitHeight(300);
@@ -229,7 +236,7 @@ public class GUI {
 
             }
 
-            // ThirdSceneR = LibrarianScene();
+            // thirdSceneR = LibrarianScene();
             // showScene(thirdSceneL);
 
         });
@@ -310,7 +317,11 @@ public class GUI {
         cartButton.setOnAction(event -> {
             BorderPane cartScrollPane = Cart(borderPane);
             cartScrollPane.setPrefWidth(300);
+
+            cartScrollPane.setStyle("-fx-border-color: #333333; -fx-border-width: 2px;");
+
             borderPane.setRight(cartScrollPane);
+
         });
 
         // make button by default clicked
@@ -388,7 +399,7 @@ public class GUI {
 
         Label rentedText = new Label("Rented Books");
         rentedText.setFont(Font.font("Arial", FontWeight.BOLD, 40));
-        rentedText.setPadding(new Insets(10));
+        rentedText.setPadding(new Insets(10, 10, 10, 40));
 
         infoGridPane.add(idBox, 0, 0);
         infoGridPane.add(nameBox, 0, 1);
@@ -401,25 +412,27 @@ public class GUI {
             RowConstraints row = new RowConstraints(50);
             infoGridPane.getRowConstraints().add(row);
         }
-
+        ScrollPane infoScrollPane = new ScrollPane(infoGridPane);
+        infoScrollPane.setFitToWidth(true);
         BorderPane infoBorderPane = new BorderPane();
         infoBorderPane.setTop(infoText);
-        infoBorderPane.setCenter(infoGridPane);
+        infoBorderPane.setCenter(infoScrollPane);
 
         BorderPane rentedBorderPane = new BorderPane();
+        rentedBorderPane.setStyle("-fx-border-color: #333333; -fx-border-width: 2px;");
         rentedBorderPane.setTop(rentedText);
 
-        ScrollPane scrollPane = new ScrollPane(rentedGridPane);
-        scrollPane.setFitToWidth(true);
+        ScrollPane rentedScrollPane = new ScrollPane(rentedGridPane);
+        rentedScrollPane.setFitToWidth(true);
 
-        rentedBorderPane.setCenter(scrollPane);
+        rentedBorderPane.setCenter(rentedScrollPane);
 
         profileBorderPane = new BorderPane();
         profileBorderPane.setLeft(infoBorderPane);
         profileBorderPane.setCenter(rentedBorderPane);
 
-        BorderPane.setMargin(rentedBorderPane, new Insets(0, 0, 0, 50));
-        p[LoggedInUser].DisplayRentedBooks(p, LoggedInUser, rentedGridPane, scrollPane);
+        // BorderPane.setMargin(rentedBorderPane, new Insets(0, 0, 0, 50));
+        p[LoggedInUser].DisplayRentedBooks(p, LoggedInUser, rentedGridPane, rentedScrollPane);
 
         return profileBorderPane;
     }
@@ -467,6 +480,7 @@ public class GUI {
                 p[LoggedInUser].RentBook(p, b, LoggedInUser, index);
                 BorderPane cartScrollPane = Cart(borderPane);
                 cartScrollPane.setPrefWidth(300);
+                cartScrollPane.setStyle("-fx-border-color: #333333; -fx-border-width: 2px;");
                 borderPane.setRight(cartScrollPane);
 
             });
@@ -635,6 +649,7 @@ public class GUI {
                     p[LoggedInUser].setRentedBooks(f);
                     BorderPane cartScrollPane = Cart(borderPane);
                     cartScrollPane.setPrefWidth(300);
+                    cartScrollPane.setStyle("-fx-border-color: #333333; -fx-border-width: 2px;");
                     borderPane.setRight(cartScrollPane);
 
                 });
@@ -658,9 +673,9 @@ public class GUI {
             p[LoggedInUser].setTotal(0);
 
             borderPaneCart.setBottom(null);
-            Label confirmtion = new Label("Transcation Completed");
+            Label confirmation = new Label("Transcation Completed");
             Label confirmation2 = new Label("go to profile to view your books");
-            confirmtion.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+            confirmation.setFont(Font.font("Arial", FontWeight.BOLD, 20));
             confirmation2.setFont(Font.font("Arial", FontWeight.BOLD, 17));
 
             Button goToProfile = new Button("Go to Profile");
@@ -670,9 +685,9 @@ public class GUI {
                 borderPane.setRight(null);
 
             });
-            VBox confirmtionVBox = new VBox(confirmtion, confirmation2, goToProfile);
-            confirmtionVBox.setAlignment(Pos.CENTER);
-            borderPaneCart.setCenter(confirmtionVBox);
+            VBox confirmationVBox = new VBox(confirmation, confirmation2, goToProfile);
+            confirmationVBox.setAlignment(Pos.CENTER);
+            borderPaneCart.setCenter(confirmationVBox);
         });
         VBox cartButton = new VBox(totalText, checkoutButton);
         cartButton.setAlignment(Pos.CENTER);

@@ -30,7 +30,7 @@ public class App extends Application {
     private GridPane usersGridPane;
     private BorderPane borderPaneBooks;
     private BorderPane cartBorderPane;
-    int LoggedInUser;
+    // int LoggedInUser;
     Books b[] = new Books[20];
     Books orgBooks[] = new Books[b.length];
     Librarian p[] = new Librarian[2];
@@ -76,11 +76,19 @@ public class App extends Application {
         p[1] = new Librarian("21P0064", "o", "Librarian", "Omar", "Korkor", "nozha",
                 "omar", "01112653391", false);
 
-        GUI gui = new GUI(stage, p, b, LoggedInUser, orgBooks);
+        GUI gui = new GUI(stage, p, b, orgBooks);
         FirstScene = gui.CreateFirstScene();
-        SecondSceneL = gui.Librarian_SignIn_Scene();
+        SecondSceneL = gui.createSecondScene();
+
+        // if (p[LoggedInUser] instanceof Librarian) {
+        // librarian = (Librarian) p[LoggedInUser];
+
+        // } else {
+        // reader = (Reader) p[LoggedInUser];
+        // }
+
         SecondSceneR = Reader_SignIn_Scene();
-        ThirdSceneR = gui.LibrarianScene();
+        ThirdSceneL = gui.LibrarianScene();
         showScene(FirstScene);
 
     }

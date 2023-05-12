@@ -1,4 +1,6 @@
 import java.util.Arrays;
+
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -136,6 +138,7 @@ public class Librarian extends Person {
                 Button returnButton = new Button("Return");
 
                 VBox rentedVBox = new VBox(imageView, rentedName, rentedAuther, returnButton);
+                rentedVBox.setPadding(new Insets(10, 10, 10, 10));
                 final int index = j;
                 returnButton.setOnAction(e -> {
                     BoughtBooks = DeleteBook(gridPane, rentedVBox, BoughtBooks, index);
