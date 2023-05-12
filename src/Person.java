@@ -1,3 +1,7 @@
+import java.util.Arrays;
+
+import javafx.scene.control.TextField;
+
 public abstract class Person {
     private String ID;
     private String Password;
@@ -8,6 +12,9 @@ public abstract class Person {
     private String Email;
     private String CellPhone;
     private boolean isBlocked;
+    private Books rentedBooks[];
+    private Books BoughtBooks[];
+    private int total = 0;
 
     public Person() {
     }
@@ -23,6 +30,8 @@ public abstract class Person {
         this.Email = Email;
         this.CellPhone = CellPhone;
         this.isBlocked = isBlocked;
+        rentedBooks = new Books[0];
+        BoughtBooks = new Books[0];
     }
 
     public String getID() {
@@ -101,4 +110,69 @@ public abstract class Person {
         this.isBlocked = isBlocked;
     }
 
+    public Books[] getRentedBooks() {
+        return this.rentedBooks;
+    }
+
+    public Books[] getBoughtBooks() {
+        return this.BoughtBooks;
+    }
+
+    // setterfor
+    public void setBoughtBooks(Books[] BoughtBooks) {
+        this.BoughtBooks = BoughtBooks;
+    }
+
+    // setter for rented books
+    public void setRentedBooks(Books[] rentedBooks) {
+        this.rentedBooks = rentedBooks;
+    }
+
+    public int getTotal() {
+        return this.total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
+    }
+
+    // called in the book scene & it adds the book to the rented books array
+    public void RentBook(Librarian p[], Books b[], int LoggedInUser, int index) {
+        Books newRented[] = new Books[rentedBooks.length + 1];
+        for (int j = 0; j < rentedBooks.length; j++) {
+            newRented[j] = rentedBooks[j];
+        }
+
+        newRented[rentedBooks.length] = b[index];
+        rentedBooks = newRented;
+        total = total + rentedBooks[rentedBooks.length - 1].getPrice();
+
+    }
+
+    public void checkout(Librarian p[], int LoggedInUser) {
+        Books newBoughtBooks[] = new Books[rentedBooks.length];
+        for (int i = 0; i < rentedBooks.length; i++) {
+            newBoughtBooks[i] = rentedBooks[i];
+        }
+        Books bothArrays[] = new Books[BoughtBooks.length + newBoughtBooks.length];
+        // concatenating array to save the bought books from previous purchases
+        System.arraycopy(BoughtBooks, 0, bothArrays, 0, BoughtBooks.length);
+        System.arraycopy(newBoughtBooks, 0, bothArrays, BoughtBooks.length, newBoughtBooks.length);
+        BoughtBooks = bothArrays;
+
+    }
+
+    public Books[] searchBooks(Books orgBooks[], TextField searchField) {
+
+        int foundBooks = 0;
+        Books[] newBooks = new Books[orgBooks.length];
+        for (int i = 0; i < orgBooks.length; i++) {
+            if (orgBooks[i].getName().toLowerCase().contains(searchField.getText().toLowerCase())) {
+                newBooks[foundBooks] = orgBooks[i];
+                foundBooks++;
+            }
+        }
+        // make size dependable on found books in search
+        return Arrays.copyOf(newBooks, foundBooks);
+    }
 }

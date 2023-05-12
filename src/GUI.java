@@ -432,7 +432,47 @@ public class GUI {
         profileBorderPane.setCenter(rentedBorderPane);
 
         // BorderPane.setMargin(rentedBorderPane, new Insets(0, 0, 0, 50));
-        p[LoggedInUser].DisplayRentedBooks(p, LoggedInUser, rentedGridPane, rentedScrollPane);
+        // p[LoggedInUser].DisplayRentedBooks(p, LoggedInUser, rentedGridPane,
+        // rentedScrollPane);
+        // VBox rentedVBox;
+        int row = 1;
+        int col = 0;
+        for (int j = 0; j < p[LoggedInUser].getBoughtBooks().length; j++) {
+
+            if (p[LoggedInUser].getBoughtBooks()[j] != null) {
+                ImageView imageView = new ImageView(p[LoggedInUser].getBoughtBooks()[j].getImage());
+                imageView.setFitWidth(120);
+                imageView.setFitHeight(170);
+                Text rentedName = new Text(p[LoggedInUser].getBoughtBooks()[j].getName());
+
+                rentedName.setStyle("-fx-font: 17 arial;-fx-font-weight: bold;");
+
+                Text rentedAuther = new Text(p[LoggedInUser].getBoughtBooks()[j].getAuthor());
+                rentedAuther.setStyle("-fx-font: 13 arial;");
+
+                Button returnButton = new Button("Return");
+
+                VBox rentedVBox = new VBox(imageView, rentedName, rentedAuther, returnButton);
+                rentedVBox.setPadding(new Insets(10, 10, 10, 10));
+                final int index = j;
+                returnButton.setOnAction(e -> {
+                    p[LoggedInUser].setBoughtBooks(p[LoggedInUser].DeleteBook(rentedGridPane, rentedVBox,
+                            p[LoggedInUser].getBoughtBooks(), index));
+                });
+
+                rentedVBox.setAlignment(Pos.CENTER);
+
+                rentedGridPane.add(rentedVBox, col, row);
+                col++;
+                // 3 books per column
+                if (col == 3) {
+                    col = 0;
+                    row++;
+                }
+
+            }
+
+        }
 
         return profileBorderPane;
     }
@@ -642,11 +682,10 @@ public class GUI {
 
                 final int index = j;
                 deleteButton.setOnAction(e -> {
-                    Books f[] = new Books[20];
-                    f = p[LoggedInUser].DeleteBook(p, LoggedInUser, gridPane, rentedHBox,
+
+                    p[LoggedInUser].setRentedBooks(p[LoggedInUser].DeleteBook(p, LoggedInUser, gridPane, rentedHBox,
                             p[LoggedInUser].getRentedBooks(),
-                            index);
-                    p[LoggedInUser].setRentedBooks(f);
+                            index));
                     BorderPane cartScrollPane = Cart(borderPane);
                     cartScrollPane.setPrefWidth(300);
                     cartScrollPane.setStyle("-fx-border-color: #333333; -fx-border-width: 2px;");
