@@ -39,12 +39,15 @@ public class GUI {
     private GridPane usersGridPane;
     private BorderPane borderPaneBooks;
     private BorderPane borderPaneCart;
-    Librarian p[];
-    Books b[];
-    Books orgBooks[];
-    int LoggedInUser;
+    private Person p[];
+    private Books b[];
+    private Books orgBooks[];
+    private int LoggedInUser;
+    private Librarian librarian;
+    private boolean isLibrarian;
+    private boolean iscart;
 
-    public GUI(Stage stage, Librarian p[], Books b[], Books orgBooks[]) {
+    public GUI(Stage stage, Person p[], Books b[], Books orgBooks[]) {
         this.stage = stage;
         this.p = p;
         this.b = b;
@@ -100,9 +103,9 @@ public class GUI {
         Lsignin.setGraphic(LibVbox);
 
         Lsignin.setOnAction(e -> {
-            stage.setTitle("Library Management System");
-            stage.setScene(secondSceneL);
-            stage.show();
+            isLibrarian = true;
+            secondSceneL = createSecondScene();
+            showScene(secondSceneL);
         });
 
         // readers buttons
@@ -141,10 +144,9 @@ public class GUI {
         Rsignin.setGraphic(ReaderVbox);
 
         Rsignin.setOnAction(e -> {
-
-            stage.setTitle("Library Management System");
-            stage.setScene(secondSceneR);
-            stage.show();
+            isLibrarian = false;
+            secondSceneR = createSecondScene();
+            showScene(secondSceneR);
         });
 
         HBox row0 = new HBox();
@@ -182,7 +184,7 @@ public class GUI {
         Text text;
         Image Image;
 
-        if (p[LoggedInUser] instanceof Librarian) {
+        if (isLibrarian) {
             text = new Text("Librarian Sign in");
             Image = new Image("img/Librarians.png");
         } else {
@@ -211,19 +213,34 @@ public class GUI {
 
             Boolean LoggedIn = false;
             for (int i = 0; i < p.length; i++) {
+                if (isLibrarian) {
+                    if (emailField.getText().equals(p[i].getEmail())
+                            && passwordField.getText().equals(p[i].getPassword()) &&
+                            p[i].getType().equals("Librarian")) {
+                        LoggedInUser = i;
+                        thirdSceneR = createThirdScene();
+                        showScene(thirdSceneR);
+                        LoggedIn = true;
+                        break;
 
-                if (emailField.getText().equals(p[i].getEmail())
-                        && passwordField.getText().equals(p[i].getPassword()) &&
-                        p[i].getType().equals("Librarian")) {
-                    LoggedInUser = i;
-                    thirdSceneR = LibrarianScene();
-                    showScene(thirdSceneR);
-                    LoggedIn = true;
-                    break;
+                    } else {
 
+                        LoggedIn = false;
+                    }
                 } else {
+                    if (emailField.getText().equals(p[i].getEmail())
+                            && passwordField.getText().equals(p[i].getPassword()) &&
+                            p[i].getType().equals("Reader")) {
+                        LoggedInUser = i;
+                        thirdSceneR = createThirdScene();
+                        showScene(thirdSceneR);
+                        LoggedIn = true;
+                        break;
 
-                    LoggedIn = false;
+                    } else {
+
+                        LoggedIn = false;
+                    }
                 }
 
             }
@@ -231,8 +248,18 @@ public class GUI {
                 Alert alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Wrong Email or Password");
-                alert.setContentText("Try again");
+                if (isLibrarian) {
+                    alert.setContentText("Try again, and make sure you are a librarian");
+                } else {
+                    alert.setContentText("Try again, and make sure you are a reader");
+                }
+
                 alert.showAndWait();
+
+            }
+
+            if (p[LoggedInUser] instanceof Librarian) {
+                librarian = (Librarian) p[LoggedInUser];
 
             }
 
@@ -258,11 +285,21 @@ public class GUI {
         StackPane stackPane = new StackPane();
         stackPane.getChildren().addAll(rectangle, gridPane);
         stackPane.setPrefSize(rectangle.getWidth(), rectangle.getHeight());
-        secondSceneL = new Scene(stackPane, 1200, 600);
-        return secondSceneL;
+
+        if (isLibrarian) {
+            secondSceneL = new Scene(stackPane, 1200, 600);
+            return secondSceneL;
+        } else {
+
+            secondSceneR = new Scene(stackPane, 1200, 600);
+            return secondSceneR;
+
+        }
+        // secondSceneL = new Scene(stackPane, 1200, 600);
+        // return secondSceneL;
     }
 
-    public Scene LibrarianScene() {
+    public Scene createThirdScene() {
         BorderPane borderPane = new BorderPane();
         HBox navbar = new HBox();
         navbar.setPrefHeight(40);
@@ -315,12 +352,18 @@ public class GUI {
         cartButton.setFont(Font.font("Arial", 17));
         cartButton.setPrefWidth(200);
         cartButton.setOnAction(event -> {
-            BorderPane cartScrollPane = Cart(borderPane);
-            cartScrollPane.setPrefWidth(300);
+            if (iscart) {
+                borderPane.setRight(null);
+                iscart = false;
+            } else {
+                BorderPane cartScrollPane = Cart(borderPane);
+                cartScrollPane.setPrefWidth(300);
 
-            cartScrollPane.setStyle("-fx-border-color: #333333; -fx-border-width: 2px;");
+                cartScrollPane.setStyle("-fx-border-color: #333333; -fx-border-width: 2px;");
 
-            borderPane.setRight(cartScrollPane);
+                borderPane.setRight(cartScrollPane);
+                iscart = true;
+            }
 
         });
 
@@ -329,7 +372,12 @@ public class GUI {
         myProfileButton.fire();
 
         navbar.setAlignment(Pos.CENTER);
-        navbar.getChildren().addAll(title, myProfileButton, usersButton, booksButton, cartButton, signOutButton);
+        if (isLibrarian == false) {
+            navbar.getChildren().addAll(title, myProfileButton, booksButton, cartButton, signOutButton);
+
+        } else {
+            navbar.getChildren().addAll(title, myProfileButton, usersButton, booksButton, cartButton, signOutButton);
+        }
 
         borderPane.setTop(navbar);
         thirdSceneL = new Scene(borderPane, 1200, 600);
@@ -415,6 +463,7 @@ public class GUI {
         ScrollPane infoScrollPane = new ScrollPane(infoGridPane);
         infoScrollPane.setFitToWidth(true);
         BorderPane infoBorderPane = new BorderPane();
+        infoBorderPane.setStyle("-fx-border-color: #333333; -fx-border-width: 2px;");
         infoBorderPane.setTop(infoText);
         infoBorderPane.setCenter(infoScrollPane);
 
@@ -431,45 +480,40 @@ public class GUI {
         profileBorderPane.setLeft(infoBorderPane);
         profileBorderPane.setCenter(rentedBorderPane);
 
-        // BorderPane.setMargin(rentedBorderPane, new Insets(0, 0, 0, 50));
-        // p[LoggedInUser].DisplayRentedBooks(p, LoggedInUser, rentedGridPane,
-        // rentedScrollPane);
-        // VBox rentedVBox;
         int row = 1;
         int col = 0;
+
         for (int j = 0; j < p[LoggedInUser].getBoughtBooks().length; j++) {
 
-            if (p[LoggedInUser].getBoughtBooks()[j] != null) {
-                ImageView imageView = new ImageView(p[LoggedInUser].getBoughtBooks()[j].getImage());
-                imageView.setFitWidth(120);
-                imageView.setFitHeight(170);
-                Text rentedName = new Text(p[LoggedInUser].getBoughtBooks()[j].getName());
+            ImageView imageView = new ImageView(p[LoggedInUser].getBoughtBooks()[j].getImage());
+            imageView.setFitWidth(120);
+            imageView.setFitHeight(170);
+            Text rentedName = new Text(p[LoggedInUser].getBoughtBooks()[j].getName());
 
-                rentedName.setStyle("-fx-font: 17 arial;-fx-font-weight: bold;");
+            rentedName.setStyle("-fx-font: 17 arial;-fx-font-weight: bold;");
 
-                Text rentedAuther = new Text(p[LoggedInUser].getBoughtBooks()[j].getAuthor());
-                rentedAuther.setStyle("-fx-font: 13 arial;");
+            Text rentedAuther = new Text(p[LoggedInUser].getBoughtBooks()[j].getAuthor());
+            rentedAuther.setStyle("-fx-font: 13 arial;");
 
-                Button returnButton = new Button("Return");
+            Button returnButton = new Button("Return");
 
-                VBox rentedVBox = new VBox(imageView, rentedName, rentedAuther, returnButton);
-                rentedVBox.setPadding(new Insets(10, 10, 10, 10));
-                final int index = j;
-                returnButton.setOnAction(e -> {
-                    p[LoggedInUser].setBoughtBooks(p[LoggedInUser].DeleteBook(rentedGridPane, rentedVBox,
-                            p[LoggedInUser].getBoughtBooks(), index));
-                });
+            VBox rentedVBox = new VBox(imageView, rentedName, rentedAuther, returnButton);
+            rentedVBox.setPadding(new Insets(10, 10, 10, 10));
+            final int index = j;
+            returnButton.setOnAction(e -> {
+                p[LoggedInUser].returnBooks(rentedGridPane, rentedVBox, index);
+                BorderPane profilBorderPane = profile(borderPane);
+                borderPane.setCenter(profilBorderPane);
+            });
 
-                rentedVBox.setAlignment(Pos.CENTER);
+            rentedVBox.setAlignment(Pos.CENTER);
 
-                rentedGridPane.add(rentedVBox, col, row);
-                col++;
-                // 3 books per column
-                if (col == 3) {
-                    col = 0;
-                    row++;
-                }
-
+            rentedGridPane.add(rentedVBox, col, row);
+            col++;
+            // 3 books per column
+            if (col == 3) {
+                col = 0;
+                row++;
             }
 
         }
@@ -507,7 +551,14 @@ public class GUI {
 
             Button deleteBook = new Button("Delete");
             Button rentBook = new Button("Rent");
-            HBox buttons = new HBox(rentBook, deleteBook);
+            HBox buttons;
+            if (isLibrarian == false) {
+
+                buttons = new HBox(rentBook);
+            } else {
+                buttons = new HBox(rentBook, deleteBook);
+            }
+
             buttons.setAlignment(Pos.CENTER);
             buttons.setSpacing(10);
 
@@ -522,11 +573,12 @@ public class GUI {
                 cartScrollPane.setPrefWidth(300);
                 cartScrollPane.setStyle("-fx-border-color: #333333; -fx-border-width: 2px;");
                 borderPane.setRight(cartScrollPane);
+                iscart = true;
 
             });
 
             deleteBook.setOnAction(e -> {
-                b = p[LoggedInUser].DeleteBook(gridPane, bookInfo, b, index);
+                b = librarian.DeleteBook(gridPane, bookInfo, b, index);
                 BorderPane booksGridPane = books(borderPane);
                 borderPane.setCenter(booksGridPane);
                 orgBooks = Arrays.copyOf(b, b.length);
@@ -573,7 +625,7 @@ public class GUI {
             addBookStage.show();
 
             addButton.setOnAction(e1 -> {
-                b = p[LoggedInUser].AddBook(b, nameField.getText(), autherField.getText(),
+                b = librarian.AddBook(b, nameField.getText(), autherField.getText(),
                         Integer.parseInt(priceField.getText()));
                 addBookStage.close();
 
@@ -602,7 +654,7 @@ public class GUI {
 
         searchButton.setOnAction(e -> {
 
-            b = p[LoggedInUser].searchBooks(orgBooks, searchField);
+            b = p[LoggedInUser].searchBooks(orgBooks, b, searchField);
             if (b.length == 0) {
 
                 Text errorMessage = new Text("No books are found");
@@ -622,6 +674,10 @@ public class GUI {
             }
 
         });
+        if (isLibrarian == false) {
+            addBook.setVisible(false);
+
+        }
 
         scrollPaneBooks.setContent(gridPane);
         scrollPaneBooks.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); // Disable horizontal scroll bar
@@ -683,9 +739,7 @@ public class GUI {
                 final int index = j;
                 deleteButton.setOnAction(e -> {
 
-                    p[LoggedInUser].setRentedBooks(p[LoggedInUser].DeleteBook(p, LoggedInUser, gridPane, rentedHBox,
-                            p[LoggedInUser].getRentedBooks(),
-                            index));
+                    p[LoggedInUser].removeFromCart(p, LoggedInUser, gridPane, rentedHBox, index);
                     BorderPane cartScrollPane = Cart(borderPane);
                     cartScrollPane.setPrefWidth(300);
                     cartScrollPane.setStyle("-fx-border-color: #333333; -fx-border-width: 2px;");

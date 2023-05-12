@@ -1,22 +1,10 @@
 import javafx.application.Application;
-import javafx.geometry.Pos;
+
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
+
 import javafx.stage.Stage;
 
 public class App extends Application {
@@ -33,7 +21,7 @@ public class App extends Application {
     // int LoggedInUser;
     Books b[] = new Books[20];
     Books orgBooks[] = new Books[b.length];
-    Librarian p[] = new Librarian[2];
+    Person p[] = new Person[3];
 
     public static void main(String[] args) {
 
@@ -75,20 +63,15 @@ public class App extends Application {
                 "karim", "01112653391", false);
         p[1] = new Librarian("21P0064", "o", "Librarian", "Omar", "Korkor", "nozha",
                 "omar", "01112653391", false);
+        p[2] = new Reader("21P0223", "e", "Reader", "ezz", "eldin", "heliopolis",
+                "ezz", "01112653391", false);
 
         GUI gui = new GUI(stage, p, b, orgBooks);
+
         FirstScene = gui.CreateFirstScene();
         SecondSceneL = gui.createSecondScene();
-
-        // if (p[LoggedInUser] instanceof Librarian) {
-        // librarian = (Librarian) p[LoggedInUser];
-
-        // } else {
-        // reader = (Reader) p[LoggedInUser];
-        // }
-
-        SecondSceneR = Reader_SignIn_Scene();
-        ThirdSceneL = gui.LibrarianScene();
+        SecondSceneR = gui.createSecondScene();
+        ThirdSceneL = gui.createThirdScene();
         showScene(FirstScene);
 
     }
@@ -97,61 +80,6 @@ public class App extends Application {
         stage.setTitle("Library Management System");
         stage.setScene(scene);
         stage.show();
-    }
-
-    private Scene Reader_SignIn_Scene() {
-        GridPane gridPane = new GridPane();
-        gridPane.setAlignment(Pos.CENTER);
-        gridPane.setHgap(10);
-        gridPane.setVgap(10);
-
-        // back to first scene
-        Button backButton = new Button("Back");
-        HBox backHBox = new HBox(backButton);
-        backHBox.setAlignment(Pos.CENTER);
-        backButton.setOnAction(event -> {
-            showScene(FirstScene);
-        });
-
-        Text text = new Text("Reader Sign in");
-        Image Image = new Image("img/Reader.png");
-        ImageView View = new ImageView(Image);
-        View.setFitWidth(300);
-        View.setFitHeight(300);
-
-        VBox titleBox = new VBox(text, View);
-        titleBox.setAlignment(Pos.CENTER);
-        titleBox.setSpacing(10);
-
-        text.setFont(Font.font("Arial", FontWeight.BOLD, 50));
-
-        Label emailLabel = new Label("Email");
-        TextField emailField = new TextField();
-
-        Label passwordLabel = new Label("Password");
-        PasswordField passwordField = new PasswordField();
-
-        Button signInButton = new Button("Sign In");
-
-        HBox hBox = new HBox(signInButton);
-        hBox.setAlignment(Pos.CENTER);
-
-        gridPane.add(titleBox, 0, 0, 2, 1);
-        gridPane.add(emailLabel, 0, 2);
-        gridPane.add(emailField, 1, 2);
-        gridPane.add(passwordLabel, 0, 3);
-        gridPane.add(passwordField, 1, 3);
-        gridPane.add(hBox, 0, 5, 2, 1);
-        gridPane.add(backHBox, 0, 6, 2, 1);
-
-        Rectangle rectangle = new Rectangle(700, 560, Color.TRANSPARENT);
-        rectangle.setStroke(Color.BLACK);
-
-        StackPane stackPane = new StackPane();
-        stackPane.getChildren().addAll(rectangle, gridPane);
-        stackPane.setPrefSize(rectangle.getWidth(), rectangle.getHeight());
-        return new Scene(stackPane, 1200, 600);
-
     }
 
 }

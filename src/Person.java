@@ -1,6 +1,9 @@
 import java.util.Arrays;
 
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 public abstract class Person {
     private String ID;
@@ -118,12 +121,10 @@ public abstract class Person {
         return this.BoughtBooks;
     }
 
-    // setterfor
     public void setBoughtBooks(Books[] BoughtBooks) {
         this.BoughtBooks = BoughtBooks;
     }
 
-    // setter for rented books
     public void setRentedBooks(Books[] rentedBooks) {
         this.rentedBooks = rentedBooks;
     }
@@ -137,7 +138,7 @@ public abstract class Person {
     }
 
     // called in the book scene & it adds the book to the rented books array
-    public void RentBook(Librarian p[], Books b[], int LoggedInUser, int index) {
+    public void RentBook(Person p[], Books b[], int LoggedInUser, int index) {
         Books newRented[] = new Books[rentedBooks.length + 1];
         for (int j = 0; j < rentedBooks.length; j++) {
             newRented[j] = rentedBooks[j];
@@ -145,11 +146,36 @@ public abstract class Person {
 
         newRented[rentedBooks.length] = b[index];
         rentedBooks = newRented;
-        total = total + rentedBooks[rentedBooks.length - 1].getPrice();
+        // total = total + rentedBooks[rentedBooks.length - 1].getPrice();
+        total = total + b[index].getPrice();
 
     }
 
-    public void checkout(Librarian p[], int LoggedInUser) {
+    public void removeFromCart(Person p[], int LoggedInUser, GridPane gridpane, HBox bookinfo,
+            int index) {
+        // remove from GUI
+        gridpane.getChildren().remove(bookinfo);
+
+        // remove from array
+        Books newB[] = new Books[rentedBooks.length - 1];
+        int c = 0;
+
+        for (int i = 0; i < rentedBooks.length; i++) {
+            if (i != index) {
+                newB[c] = rentedBooks[i];
+                c++;
+
+            }
+
+        }
+        // p[LoggedInUser].setTotal(getTotal() -
+        // p[LoggedInUser].getRentedBooks()[index].getPrice());
+        total = total - rentedBooks[index].getPrice();
+
+        rentedBooks = newB;
+    }
+
+    public void checkout(Person p[], int LoggedInUser) {
         Books newBoughtBooks[] = new Books[rentedBooks.length];
         for (int i = 0; i < rentedBooks.length; i++) {
             newBoughtBooks[i] = rentedBooks[i];
@@ -162,7 +188,7 @@ public abstract class Person {
 
     }
 
-    public Books[] searchBooks(Books orgBooks[], TextField searchField) {
+    public Books[] searchBooks(Books orgBooks[], Books b[], TextField searchField) {
 
         int foundBooks = 0;
         Books[] newBooks = new Books[orgBooks.length];
@@ -174,5 +200,23 @@ public abstract class Person {
         }
         // make size dependable on found books in search
         return Arrays.copyOf(newBooks, foundBooks);
+    }
+
+    public void returnBooks(GridPane gridpane, VBox bookinfo, int index) {
+        // remove from GUI
+        gridpane.getChildren().remove(bookinfo);
+
+        // remove from array
+        Books newBoughtBooks[] = new Books[BoughtBooks.length - 1];
+        int c = 0;
+
+        for (int d = 0; d < BoughtBooks.length; d++) {
+            if (d != index) {
+                newBoughtBooks[c] = BoughtBooks[d];
+                c++;
+            }
+        }
+
+        BoughtBooks = newBoughtBooks;
     }
 }
