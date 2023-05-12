@@ -12,10 +12,15 @@ import javafx.scene.text.Text;
 
 public class Librarian extends Person {
     private Books rentedBooks[];
+    private Books BoughtBooks[];
     private int total = 0;
 
     public int getTotal() {
         return this.total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
     }
 
     public Librarian() {
@@ -25,12 +30,17 @@ public class Librarian extends Person {
     public Librarian(String ID, String Password, String Type, String FirstName, String LastName, String Address,
             String Email, String CellPhone, boolean isBlocked) {
         super(ID, Password, Type, FirstName, LastName, Address, Email, CellPhone, isBlocked);
-        rentedBooks = new Books[20];
+        rentedBooks = new Books[0];
+        BoughtBooks = new Books[0];
 
     }
 
     public Books[] getRentedBooks() {
         return this.rentedBooks;
+    }
+
+    public Books[] getBoughtBooks() {
+        return this.BoughtBooks;
     }
 
     // setter for rented books
@@ -81,14 +91,27 @@ public class Librarian extends Person {
 
     // called in the book scene & it adds the book to the rented books array
     public void RentBook(Librarian p[], Books b[], int LoggedInUser, int index) {
-        for (int j = 0; j < p[LoggedInUser].getRentedBooks().length; j++) {
-            if (p[LoggedInUser].getRentedBooks()[j] == null) {
-                p[LoggedInUser].getRentedBooks()[j] = b[index];
-                total = total + p[LoggedInUser].getRentedBooks()[j].getPrice();
-                break;
-            }
-
+        Books newRented[] = new Books[rentedBooks.length + 1];
+        for (int j = 0; j < rentedBooks.length; j++) {
+            newRented[j] = rentedBooks[j];
         }
+
+        newRented[rentedBooks.length] = b[index];
+        rentedBooks = newRented;
+        total = total + rentedBooks[rentedBooks.length - 1].getPrice();
+
+    }
+
+    public void checkout(Librarian p[], int LoggedInUser) {
+        Books newBoughtBooks[] = new Books[rentedBooks.length];
+        for (int i = 0; i < rentedBooks.length; i++) {
+            newBoughtBooks[i] = rentedBooks[i];
+        }
+        Books bothArrays[] = new Books[BoughtBooks.length + newBoughtBooks.length];
+        // concatenating array to save the bought books from previous purchases
+        System.arraycopy(BoughtBooks, 0, bothArrays, 0, BoughtBooks.length);
+        System.arraycopy(newBoughtBooks, 0, bothArrays, BoughtBooks.length, newBoughtBooks.length);
+        BoughtBooks = bothArrays;
 
     }
 
@@ -97,28 +120,25 @@ public class Librarian extends Person {
         // VBox rentedVBox;
         int row = 1;
         int col = 0;
-        for (int j = 0; j < p[LoggedInUser].getRentedBooks().length; j++) {
+        for (int j = 0; j < p[LoggedInUser].getBoughtBooks().length; j++) {
 
-            if (p[LoggedInUser].getRentedBooks()[j] != null) {
-                ImageView imageView = new ImageView(p[LoggedInUser].getRentedBooks()[j].getImage());
+            if (p[LoggedInUser].getBoughtBooks()[j] != null) {
+                ImageView imageView = new ImageView(p[LoggedInUser].getBoughtBooks()[j].getImage());
                 imageView.setFitWidth(120);
                 imageView.setFitHeight(170);
-                Text rentedName = new Text(p[LoggedInUser].getRentedBooks()[j].getName());
+                Text rentedName = new Text(p[LoggedInUser].getBoughtBooks()[j].getName());
 
                 rentedName.setStyle("-fx-font: 17 arial;-fx-font-weight: bold;");
 
-                Text rentedAuther = new Text(p[LoggedInUser].getRentedBooks()[j].getAuthor());
-
+                Text rentedAuther = new Text(p[LoggedInUser].getBoughtBooks()[j].getAuthor());
                 rentedAuther.setStyle("-fx-font: 13 arial;");
-                Text rentedDate = new Text(String.valueOf(p[LoggedInUser].getRentedBooks()[j].getPrice()));
 
-                rentedDate.setStyle("-fx-font: 13 arial;");
                 Button returnButton = new Button("Return");
 
-                VBox rentedVBox = new VBox(imageView, rentedName, rentedAuther, rentedDate, returnButton);
+                VBox rentedVBox = new VBox(imageView, rentedName, rentedAuther, returnButton);
                 final int index = j;
                 returnButton.setOnAction(e -> {
-                    rentedBooks = DeleteBook(gridPane, rentedVBox, rentedBooks, index);
+                    BoughtBooks = DeleteBook(gridPane, rentedVBox, BoughtBooks, index);
                 });
 
                 rentedVBox.setAlignment(Pos.CENTER);
