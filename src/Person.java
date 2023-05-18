@@ -146,8 +146,17 @@ public abstract class Person {
 
         newRented[rentedBooks.length] = b[index];
         rentedBooks = newRented;
+
         // total = total + rentedBooks[rentedBooks.length - 1].getPrice();
         total = total + b[index].getPrice();
+
+        Person newRentedBy[] = new Person[b[index].getRentedBy().length + 1];
+
+        for (int i = 0; i < b[index].getRentedBy().length; i++) {
+            newRentedBy[i] = b[index].getRentedBy()[i];
+        }
+        newRentedBy[b[index].getRentedBy().length] = p[LoggedInUser];
+        b[index].setRentedBy(newRentedBy);
 
     }
 
@@ -155,23 +164,18 @@ public abstract class Person {
             int index) {
         // remove from GUI
         gridpane.getChildren().remove(bookinfo);
-
         // remove from array
         Books newB[] = new Books[rentedBooks.length - 1];
         int c = 0;
-
         for (int i = 0; i < rentedBooks.length; i++) {
             if (i != index) {
                 newB[c] = rentedBooks[i];
                 c++;
-
             }
-
         }
         // p[LoggedInUser].setTotal(getTotal() -
         // p[LoggedInUser].getRentedBooks()[index].getPrice());
         total = total - rentedBooks[index].getPrice();
-
         rentedBooks = newB;
     }
 
@@ -219,4 +223,5 @@ public abstract class Person {
 
         BoughtBooks = newBoughtBooks;
     }
+
 }

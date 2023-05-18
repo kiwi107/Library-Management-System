@@ -1,10 +1,7 @@
 import javafx.application.Application;
-
 import javafx.scene.Scene;
-
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-
 import javafx.stage.Stage;
 
 public class App extends Application {
@@ -21,7 +18,8 @@ public class App extends Application {
     // int LoggedInUser;
     Books b[] = new Books[20];
     Books orgBooks[] = new Books[b.length];
-    Person p[] = new Person[3];
+    Person p[] = new Person[4];
+    Person orgUsers[] = new Person[p.length];
 
     public static void main(String[] args) {
 
@@ -55,18 +53,22 @@ public class App extends Application {
         b[18] = new Books("think like a monk", "Jay Shetty", 219, "img/avatar.jpeg");
         b[19] = new Books("The Silver Chair", "C.S.Lewis", 195, "img/avatar.jpeg");
 
-        for (int j = 0; j < b.length; j++) {
-            orgBooks[j] = b[j];
-        }
-
         p[0] = new Librarian("21P0223", "k", "Librarian", "Karim", "Sherif", "heliopolis",
                 "karim", "01112653391", false);
         p[1] = new Librarian("21P0064", "o", "Librarian", "Omar", "Korkor", "nozha",
                 "omar", "01112653391", false);
         p[2] = new Reader("21P0223", "e", "Reader", "ezz", "eldin", "heliopolis",
                 "ezz", "01112653391", false);
-
-        GUI gui = new GUI(stage, p, b, orgBooks);
+        p[3] = new Reader("21P0223", "a", "Reader", "ali", "refaat", "heliopolis",
+                "Ali", "01112653391", false);
+        // org arrays for search
+        for (int j = 0; j < b.length; j++) {
+            orgBooks[j] = b[j];
+        }
+        for (int j = 0; j < p.length; j++) {
+            orgUsers[j] = p[j];
+        }
+        GUI gui = new GUI(stage, p, b, orgBooks, orgUsers);
 
         FirstScene = gui.CreateFirstScene();
         SecondSceneL = gui.createSecondScene();

@@ -5,12 +5,14 @@ public class Books {
     private String Name;
     private String Author;
     private int Price;
+    private Person rentedBy[];
 
     public Books(String Name, String Author, int Price, String imagePath) {
         this.Name = Name;
         this.Author = Author;
         this.Price = Price;
         this.image = new Image(imagePath);
+        rentedBy = new Person[0];
     }
 
     public Books(String Name, String Author, int Price) {
@@ -42,5 +44,13 @@ public class Books {
 
     public Image getImage() {
         return this.image;
+    }
+
+    public Person[] getRentedBy() {
+        return this.rentedBy;
+    }
+
+    public void setRentedBy(Person rentedBy[]) {
+        this.rentedBy = rentedBy;
     }
 }
