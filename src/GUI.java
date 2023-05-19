@@ -1,18 +1,22 @@
 import java.util.Arrays;
 import javafx.util.Duration;
 import javafx.animation.ScaleTransition;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -503,7 +507,6 @@ public class GUI {
             final int index = j;
             returnButton.setOnAction(e -> {
                 p[LoggedInUser].returnBooks(rentedGridPane, rentedVBox, index);
-                // BorderPane profilBorderPane = profile(borderPane);
                 borderPane.setCenter(profile(borderPane));
             });
 
@@ -584,36 +587,92 @@ public class GUI {
             userVbox.setPadding(new Insets(10));
             userVbox.setAlignment(Pos.CENTER);
 
-            // if (orgUsers[i].getIsBlocked()) {
-            // blockUser.setText("Unblock");
-            // p[i].setIsBlocked(false);
-            // borderPane.setCenter(users(borderPane));
-            // } else if (orgUsers[i].getIsBlocked() == false) {
-            // borderPane.setCenter(users(borderPane));
-            // }
-
             viewRentedBooks.setOnAction(e -> {
+
                 Stage viewRentedBooksStage = new Stage();
+
                 GridPane viewRentedBooksGridPane = new GridPane();
+                BorderPane viewRentedBooksBorderPane = new BorderPane();
+                Scene viewRentedBooksScene = new Scene(viewRentedBooksBorderPane, 500, 400);
+
                 Label rentedBooksLabel = new Label("Rented Books by " + orgUsers[index].getFirstName() + " "
                         + orgUsers[index].getLastName() + ":");
+                viewRentedBooksBorderPane.setTop(rentedBooksLabel);
                 rentedBooksLabel.setFont(Font.font("Arial", FontWeight.BOLD, 20));
                 rentedBooksLabel.setPadding(new Insets(10));
-                viewRentedBooksGridPane.add(rentedBooksLabel, 0, 0);
 
                 for (int j = 0; j < orgUsers[index].getBoughtBooks().length; j++) {
+                    final int user = j;
                     Label rentedBookName = new Label(j + 1 + "-" + orgUsers[index].getBoughtBooks()[j].getName());
+
                     Button deleteBook = new Button("delete");
-                    // deleteBook.setOnAction(
-                    // librarian
-                    // );
+                    HBox rentedBookHBox = new HBox(rentedBookName, deleteBook);
+                    VBox userVbox1 = new VBox(rentedBookHBox);
+                    // force return book
+                    deleteBook.setOnAction(e1 -> {
+                        viewRentedBooksGridPane.getChildren().remove(userVbox1);
+                        p[index].returnBooks(viewRentedBooksGridPane, userVbox1, user);
+                    });
                     rentedBookName.setFont(Font.font("Arial", FontWeight.BOLD, 13));
                     rentedBookName.setPadding(new Insets(10));
                     rentedBookName.setFont(Font.font("Arial", 13));
-                    viewRentedBooksGridPane.add(rentedBookName, 0, j + 1);
+
+                    viewRentedBooksGridPane.add(userVbox1, 0, j + 1);
                 }
+                ListView<String> bookListView = new ListView<>();
+
+                ObservableList<String> bookNames = FXCollections.observableArrayList();
+                for (Books book : b) {
+                    bookNames.add(book.getName());
+                }
+                bookListView.setItems(bookNames);
+
+                bookListView.getSelectionModel().selectedItemProperty()
+                        .addListener((observable, oldValue, newValue) -> {
+                            int selectedIndex = -1;
+                            for (int k = 0; k < b.length; k++) {
+                                if (b[k].getName().equals(newValue)) {
+                                    selectedIndex = k;
+                                    break;
+                                }
+                            }
+
+                            if (selectedIndex != -1) {
+
+                                p[index].RentBook(orgUsers, orgBooks, index, selectedIndex);
+                                p[index].checkout(p, index);
+                                p[index].setRentedBooks(new Books[0]);
+                                p[index].setTotal(0);
+                                // call method remove from cart
+
+                                // refresh the scene
+                                viewRentedBooksGridPane.getChildren().clear();
+                                for (int j = 0; j < orgUsers[index].getBoughtBooks().length; j++) {
+                                    final int user = j;
+                                    Label rentedBookName = new Label(
+                                            j + 1 + "-" + orgUsers[index].getBoughtBooks()[j].getName());
+
+                                    Button deleteBook = new Button("delete");
+                                    HBox rentedBookHBox = new HBox(rentedBookName, deleteBook);
+                                    VBox userVbox1 = new VBox(rentedBookHBox);
+                                    // force return book
+                                    deleteBook.setOnAction(e1 -> {
+                                        viewRentedBooksGridPane.getChildren().remove(userVbox1);
+                                        p[index].returnBooks(viewRentedBooksGridPane, userVbox1, user);
+                                    });
+                                    rentedBookName.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+                                    rentedBookName.setPadding(new Insets(10));
+                                    rentedBookName.setFont(Font.font("Arial", 13));
+
+                                    viewRentedBooksGridPane.add(userVbox1, 0, j + 1);
+                                }
+                            }
+                        });
+                viewRentedBooksBorderPane.setLeft(viewRentedBooksGridPane);
+                viewRentedBooksBorderPane.setRight(bookListView);
+
                 viewRentedBooksGridPane.setHgap(15);
-                Scene viewRentedBooksScene = new Scene(viewRentedBooksGridPane, 500, 400);
+
                 viewRentedBooksStage.setScene(viewRentedBooksScene);
                 viewRentedBooksStage.show();
 
@@ -686,12 +745,68 @@ public class GUI {
             addUserGridPane.add(addButton, 1, 8);
 
             Stage addUserStage = new Stage();
-            Scene addUserScene = new Scene(addUserGridPane, 600, 400);
+            Scene addUserScene = new Scene(addUserGridPane, 700, 500);
             addUserStage.setScene(addUserScene);
             addUserStage.show();
 
             addButton.setOnAction(e1 -> {
                 buttonClicked = true;
+                String type = typeField.getText();
+                try {
+                    if (IDField.getText().isEmpty()) {
+                        throw new IllegalArgumentException("ID cannot be empty");
+                    }
+
+                    if (firstNameField.getText().isEmpty()) {
+                        throw new IllegalArgumentException("First Name cannot be empty");
+                    }
+
+                    if (lastNameField.getText().isEmpty()) {
+                        throw new IllegalArgumentException("Last Name cannot be empty");
+                    }
+
+                    if (emailField.getText().isEmpty()) {
+                        throw new IllegalArgumentException("Email cannot be empty");
+                    }
+
+                    if (passwordField.getText().isEmpty()) {
+                        throw new IllegalArgumentException("Password cannot be empty");
+                    }
+
+                    if (addressField.getText().isEmpty()) {
+                        throw new IllegalArgumentException("Address cannot be empty");
+                    }
+
+                    if (phoneField.getText().isEmpty()) {
+                        throw new IllegalArgumentException("Phone cannot be empty");
+                    }
+
+                    if (typeField.getText().isEmpty()) {
+                        throw new IllegalArgumentException("Type cannot be empty");
+                    }
+
+                } catch (IllegalArgumentException exx) {
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Error: " + exx.getMessage());
+                    alert.showAndWait();
+
+                }
+
+                try {
+                    if (!type.equals("Reader") && !type.equals("Librarian")) {
+                        throw new IllegalArgumentException(
+                                "Type must be either 'Reader' or 'Librarian', it is case sensitive");
+                    }
+                } catch (IllegalArgumentException ex) {
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Invalid Type");
+                    alert.setHeaderText("Invalid Type");
+                    alert.setContentText(ex.getMessage());
+                    alert.showAndWait();
+                    return;
+                }
 
                 p = librarian.AddUser(p, IDField.getText(), passwordField.getText(), typeField.getText(),
                         firstNameField.getText(), lastNameField.getText(),
@@ -711,7 +826,12 @@ public class GUI {
 
         Region region = new Region();
         HBox.setHgrow(region, Priority.ALWAYS);
-        HBox Add_Search = new HBox(addUser, region, searchField);
+        HBox Add_Search;
+        if (isLibrarian) {
+            Add_Search = new HBox(addUser, region, searchField);
+        } else {
+            Add_Search = new HBox(region, searchField);
+        }
 
         Add_Search.setPadding(new Insets(20, 20, 20, 20));
 
@@ -922,12 +1042,48 @@ public class GUI {
 
             addButton.setOnAction(e1 -> {
                 buttonClicked = true;
+                String priceText = priceField.getText();
+                int price;
+                try {
+                    if (nameField.getText().isEmpty()) {
+                        throw new IllegalArgumentException("Book name cannot be empty");
+                    }
+
+                    if (autherField.getText().isEmpty()) {
+                        throw new IllegalArgumentException("Book author cannot be empty");
+                    }
+
+                    if (priceField.getText().isEmpty()) {
+                        throw new IllegalArgumentException("Price cannot be empty");
+                    }
+                    if (filePathTextField.getText().isEmpty()) {
+                        throw new IllegalArgumentException("Image cannot be empty");
+                    }
+
+                } catch (IllegalArgumentException es) {
+
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Error: " + es.getMessage());
+                    alert.showAndWait();
+                }
+
+                try {
+                    price = Integer.parseInt(priceText);
+                } catch (NumberFormatException ex) {
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Invalid Price");
+                    alert.setHeaderText("Invalid Price");
+                    alert.setContentText("Price must be a numerical value.");
+                    alert.showAndWait();
+                    return;
+                }
 
                 b = librarian.AddBook(b, nameField.getText(), autherField.getText(),
                         Integer.parseInt(priceField.getText()), filePathTextField.getText());
                 addBookStage.close();
 
-                // BorderPane addBookScrollPane = books(borderPane);
                 borderPane.setCenter(books(borderPane));
 
                 orgBooks = Arrays.copyOf(b, b.length);// update orgBooks array
