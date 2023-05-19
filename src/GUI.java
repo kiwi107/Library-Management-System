@@ -16,7 +16,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -210,8 +209,8 @@ public class GUI {
 
         text.setFont(Font.font("Arial", FontWeight.BOLD, 50));
 
-        Label emailLabel = new Label("Email");
-        TextField emailField = new TextField();
+        Label IDLabel = new Label("ID");
+        TextField IDField = new TextField();
 
         Label passwordLabel = new Label("Password");
         PasswordField passwordField = new PasswordField();
@@ -223,7 +222,7 @@ public class GUI {
             Boolean LoggedIn = false;
             for (int i = 0; i < orgUsers.length; i++) {
                 if (isLibrarian) {
-                    if (emailField.getText().equals(orgUsers[i].getEmail())
+                    if (IDField.getText().equals(orgUsers[i].getID())
                             && passwordField.getText().equals(orgUsers[i].getPassword()) &&
                             orgUsers[i].getType().equals("Librarian")) {
                         LoggedInUser = i;
@@ -237,7 +236,7 @@ public class GUI {
                         LoggedIn = false;
                     }
                 } else {
-                    if (emailField.getText().equals(orgUsers[i].getEmail())
+                    if (IDField.getText().equals(orgUsers[i].getID())
                             && passwordField.getText().equals(orgUsers[i].getPassword()) &&
                             orgUsers[i].getType().equals("Reader")) {
                         LoggedInUser = i;
@@ -283,8 +282,8 @@ public class GUI {
         hBox.setAlignment(Pos.CENTER);
 
         gridPane.add(titleBox, 0, 0, 2, 1);
-        gridPane.add(emailLabel, 0, 2);
-        gridPane.add(emailField, 1, 2);
+        gridPane.add(IDLabel, 0, 2);
+        gridPane.add(IDField, 1, 2);
         gridPane.add(passwordLabel, 0, 3);
         gridPane.add(passwordField, 1, 3);
         gridPane.add(hBox, 0, 5, 2, 1);
@@ -670,6 +669,10 @@ public class GUI {
                         });
                 viewRentedBooksBorderPane.setLeft(viewRentedBooksGridPane);
                 viewRentedBooksBorderPane.setRight(bookListView);
+                Label msg = new Label("Double click on the book to add it to the user books list");
+                msg.setFont(Font.font("Arial", FontWeight.BOLD, 15));
+                msg.setPadding(new Insets(20));
+                viewRentedBooksBorderPane.setBottom(msg);
 
                 viewRentedBooksGridPane.setHgap(15);
 
@@ -894,7 +897,7 @@ public class GUI {
             bookName.setFont(Font.font("Arial", FontWeight.BOLD, 13));
             Text bookAuthor = new Text(b[i].getAuthor());
             bookAuthor.setFont(Font.font("Arial", 10));
-            Text price = new Text(String.valueOf(b[i].getPrice()));
+            Text price = new Text(String.valueOf(b[i].getPrice()) + "" + "EGP");
             price.setFont(Font.font("Arial", 10));
 
             Button deleteBook = new Button("Delete");

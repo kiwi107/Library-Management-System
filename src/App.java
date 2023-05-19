@@ -53,14 +53,14 @@ public class App extends Application {
         b[18] = new Books("think like a monk", "Jay Shetty", 219, "img/avatar.jpeg");
         b[19] = new Books("The Silver Chair", "C.S.Lewis", 195, "img/avatar.jpeg");
 
-        p[0] = new Librarian("21P0223", "k", "Librarian", "Karim", "Sherif", "heliopolis",
-                "karim", "01112653391", false);
-        p[1] = new Librarian("21P0064", "o", "Librarian", "Omar", "Korkor", "nozha",
-                "omar", "01112653391", false);
-        p[2] = new Reader("21P0223", "e", "Reader", "ezz", "eldin", "heliopolis",
-                "ezz", "01112653391", false);
-        p[3] = new Reader("21P0223", "a", "Reader", "ali", "refaat", "heliopolis",
-                "Ali", "01112653391", false);
+        p[0] = new Librarian("21p0223", "k", "Librarian", "Karim", "Sherif", "heliopolis",
+                "karim", "01112342391", false);
+        p[1] = new Librarian("21p0065", "o", "Librarian", "Omar", "Korkor", "nozha",
+                "omar", "01234343391", false);
+        p[2] = new Reader("21p0100", "e", "Reader", "ezz", "eldin", "nozha",
+                "ezz", "0114355391", false);
+        p[3] = new Reader("21P0105", "a", "Reader", "ali", "refaat", "tagamo3",
+                "ali", "01135435545", false);
         // org arrays for search
         for (int j = 0; j < b.length; j++) {
             orgBooks[j] = b[j];
